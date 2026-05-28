@@ -1,0 +1,581 @@
+import { useState } from "react";
+
+const MAP_WIDTH = 1578;
+const MAP_HEIGHT = 996;
+
+const cities = [
+  {
+    id: "beacon",
+    name: "Beacon",
+    type: "Capital City",
+    x: 821,
+    y: 339,
+    portraits: "/portraits/BeaconArpadCapital.jpg",
+    description: "The capital of Arpad, built inside the ancient Lake of Dragon's Fall.",
+  },
+  {
+    id: "vanderhold",
+    name: "Vanderhold",
+    type: "Major City",
+    x: 877,
+    y: 897,
+    portraits: "/portraits/VanderholdFreeCities.jpg",
+    description:
+      "The starting point of the campaign and the largest port in the Confederation of Free Cities.",
+  },
+  {
+    id: "anchorhorn",
+    name: "Anchorhorn",
+    type: "Major City",
+    x: 1001,
+    y: 669,
+    portraits: "/portraits/AnchorhornLythSouthernPort.jpg",
+    description: "One of the largest and southernmost ports of the Kingdom of Lyth.",
+  },
+  {
+    id: "caelmarisport",
+    name: "Caelmarisport",
+    type: "Capital City",
+    x: 492,
+    y: 225,
+    portraits: "/portraits/CaelmarisportEssiaCapitol.jpg",
+    description: "The capital city and major port for the Kingdom of Essia.",
+  },
+  {
+    id: "castleforge",
+    name: "Castleforge",
+    type: "Capital City",
+    x: 1023,
+    y: 70,
+    portraits: "/portraits/CastleforgeNorthernDwarvenCapitaloutside.jpg",
+    description:
+      "Capital city for the Northern Dwarven Enclave and an unparalleled mountain fortress.",
+  },
+  {
+    id: "aspengeld",
+    name: "Aspengeld",
+    type: "Capital City",
+    x: 495,
+    y: 116,
+    portraits: "/portraits/AspengeldElvishDomainCapital.jpg",
+    description: "Forest capital and ancient home to the Elves of Ostirose.",
+  },
+  {
+    id: "esemere",
+    name: "Esemere",
+    type: "Major City",
+    x: 698,
+    y: 954,
+    portraits: "/portraits/EsemereFreeCities.jpg",
+    description:
+      "A huge trading port and the bridge between the trade networks of the west and east coasts of Ostirose.",
+  },
+  {
+    id: "fang-cove",
+    name: "Fang Cove",
+    type: "Major City",
+    x: 1132,
+    y: 541,
+    portraits: "/portraits/FangCoveSundrinEmpireport.jpg",
+    description:
+      "The second largest port of the Sundrin Empire and a bustling hub of trade from all over Trioka.",
+  },
+  {
+    id: "foundleinfall",
+    name: "Foundleinfall",
+    type: "Major City",
+    x: 1468,
+    y: 463,
+    portraits: "/portraits/FoundleinfallSundrinEmpire.jpg",
+    description:
+      "An ancient city once part of the Magisterium, long since found and inhabited by Orcs and Giants.",
+  },
+  {
+    id: "freehold",
+    name: "Freehold",
+    type: "Major City",
+    x: 284,
+    y: 911,
+    portraits: "/portraits/FreeholdFreeCities.jpg",
+    description:
+      "The far out-of-the-way home for smugglers, shady types, and degenerate pirates of every variety.",
+  },
+  {
+    id: "lastport",
+    name: "Lastport",
+    type: "Major City",
+    x: 720,
+    y: 623,
+    portraits: "/portraits/LastportFreeCities.jpg",
+    description:
+      "Last harbor of the Confederation of Free Cities in the Bay of Lyth before passing into the northern territories.",
+  },
+  {
+    id: "oasimere",
+    name: "Oasimere",
+    type: "Major City",
+    x: 687,
+    y: 859,
+    portraits: "/portraits/OasimereFreeCities.jpg",
+    description:
+      "The lifeblood of the trade network through the central desert, a trade hub city built around an oasis.",
+  },
+  {
+    id: "tranquil-valley",
+    name: "Tranquil Valley",
+    type: "Major City",
+    x: 565,
+    y: 847,
+    portraits: "/portraits/TranquilValleyFreeCities.jpg",
+    description:
+      "A major farming and luxury hub of the Confederation built on the border of grassland and desert savannah.",
+  },
+  {
+    id: "hourglass",
+    name: "Hourglass",
+    type: "Major City",
+    x: 793,
+    y: 764,
+    portraits: "/portraits/HourglassFreeCities.jpg",
+    description:
+      "A major trade route city and market district for the Confederation of Free Cities.",
+  },
+  {
+    id: "westhaven",
+    name: "Westhaven",
+    type: "Major City",
+    x: 231,
+    y: 696,
+    portraits: "/portraits/WesthavenFreeCities.jpg",
+    description: "A major protected port on the stormy western coast.",
+  },
+  {
+    id: "stormcliff",
+    name: "Stormcliff",
+    type: "Capital City",
+    x: 499,
+    y: 507,
+    portraits: "/portraits/StormcliffSouthernDwarvenCapital.png",
+    description:
+      "Capital of the Southern Dwarven Enclave and protected port on the stormy western coast.",
+  },
+  {
+    id: "the-nest",
+    name: "The Nest",
+    type: "Capital City",
+    x: 1289,
+    y: 968,
+    portraits: "/portraits/TheNestDraconicTerritoriescapital.jpg",
+    description:
+      "Ancient home of dragons and now seat of power in the Draconic Territories.",
+  },
+  {
+    id: "oasirath",
+    name: "Oasirath",
+    type: "Capital City",
+    x: 1321,
+    y: 799,
+    portraits: "/portraits/OasirathKingdomoftheWastescapital.jpg",
+    description:
+      "The capital of the Kingdom of the Wastes, a glimpse into the harsh realities of the desert.",
+  },
+  {
+    id: "sundrak",
+    name: "SunDrak",
+    type: "Capital City",
+    x: 1317,
+    y: 421,
+    portraits: "/portraits/SundrakSundrinEmpireCapital.jpg",
+    description:
+      "A joint venture city built by the Orcs and Giants in celebration of their alliance, now the capital of the Sundrin Empire.",
+  },
+  {
+    id: "aurelions-reach",
+    name: "Aurelion's Reach",
+    type: "Major City",
+    x: 659,
+    y: 219,
+    portraits: "/portraits/Aurelion'sReach.png",
+    description:
+      "The second largest city in Essia; this image is all that remains of the once-great city.",
+  },
+  {
+    id: "preservation",
+    name: "Preservation",
+    type: "Capital City",
+    x: 1188,
+    y: 129,
+    portraits: "/portraits/PreservationTheMagisterium'sCapital.jpg",
+    description:
+      "The desiccated corpse of the once beautiful capital city of the Magisterium.",
+  },
+  {
+    id: "outreach",
+    name: "Outreach",
+    type: "Major City",
+    x: 1258,
+    y: 312,
+    portraits: "/portraits/OutreachTheWildlands.jpg",
+    description:
+      "One of the largest cities in the Wildlands, built in the shadow of the ruined Hexahedron.",
+  },
+  {
+    id: "dawnguard",
+    name: "Dawnguard",
+    type: "Major City",
+    x: 636,
+    y: 503,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "The fortress city and last major hub of the dwarves before exiting their domain.",
+  },
+  {
+    id: "riverscrown",
+    name: "Riverscrown",
+    type: "Capital City",
+    x: 916,
+    y: 538,
+    portraits: "/portraits/RiverscrownLyth'sCapital.jpg",
+    description:
+      "The capital city of the Kingdom of Lyth, where three great rivers merge into one.",
+  },
+  {
+    id: "rosewood",
+    name: "Rosewood",
+    type: "Major City",
+    x: 712,
+    y: 433,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "An ancient battleground between Lyth and Essia, the town growing here is a testament to human perseverance.",
+  },
+  {
+    id: "crownhill",
+    name: "Crownhill",
+    type: "Major City",
+    x: 797,
+    y: 483,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "In the contested hills of the Kingdom of Essia, once part of the Kingdom of Lyth, this city is said to sit like a crown above the rolling hills.",
+  },
+  {
+    id: "rivercross",
+    name: "Rivercross",
+    type: "Major City",
+    x: 372,
+    y: 677,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "A major river crossing and trade depot on the Westfork River.",
+  },
+  {
+    id: "mountpass",
+    name: "Mountpass",
+    type: "Major City",
+    x: 409,
+    y: 649,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "This city is the northernmost major city on the western side of the Confederation of Free Cities.",
+  },
+  {
+    id: "shadowstone",
+    name: "Shadowstone",
+    type: "Major City",
+    x: 681,
+    y: 681,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "A city built in the shadows of the mountains, one of several important refuges on the trade route north.",
+  },
+  {
+    id: "newhaven",
+    name: "Newhaven",
+    type: "Major City",
+    x: 403,
+    y: 756,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "This city is a vital population hub, housing much of the labor that works the many farms and orchards in the surrounding lush valleys.",
+  },
+  {
+    id: "pleasant-valley",
+    name: "Pleasant Valley",
+    type: "Major City",
+    x: 333,
+    y: 772,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "One of the most lush and garden-filled cities in all of Ostirose.",
+  },
+  {
+    id: "deserts-edge",
+    name: "Desert's Edge",
+    type: "Major City",
+    x: 359,
+    y: 813,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "A city in the Confederation of Free Cities grown out like a practical wall against the harsh southern desert.",
+  },
+  {
+    id: "portsmith",
+    name: "Portsmith",
+    type: "Major City",
+    x: 989,
+    y: 404,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "The largest trade harbor for the Kingdom of Lyth, always bustling and full of traffic from all throughout Trioka.",
+  },
+   {
+    id: "athran-point",
+    name: "Athran Point",
+    type: "Major City",
+    x: 466,
+    y: 339,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "A Major fortress city protecting a vitally populated and resource heavy peninsula in the Kingdom of Essia.",
+  },
+   {
+    id: "whitewake",
+    name: "Whitewake",
+    type: "Major City",
+    x: 694,
+    y: 40,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "Northmost harbor in Ostirose, often frozen solid in the winter and excessible only by the northern road.",
+  },
+   {
+    id: "cape-saffar",
+    name: "Cape Saffar",
+    type: "Major City",
+    x: 1032,
+    y: 177,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "The Kingdom of Arpad's only major port city.",
+  },
+   {
+    id: "north-castleport",
+    name: "North Castleport",
+    type: "Major City",
+    x: 969,
+    y: 295,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "The largest military garrison and fortified port city in Lyth.",
+  },
+   {
+    id: "foreharrow",
+    name: "Foreharrow",
+    type: "Major City",
+    x: 629,
+    y: 339,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "Often called the metropolis at the forest gate, one of the largest cities in Essia and sitting in the eves of the great forest which covers much of Essia.",
+  },
+   {
+    id: "centerpoint",
+    name: "Centerpoint",
+    type: "Major City",
+    x: 705,
+    y: 338,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "Named for its uniquely central position in the continent.",
+  },
+   {
+    id: "bayview-landing",
+    name: "Bayview Landing",
+    type: "Major City",
+    x: 846,
+    y: 639,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "The major port closest to the Lyth bay.",
+  },
+];
+
+
+export default function App() {
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [lastClick, setLastClick] = useState(null);
+
+  const handleMapClick = (event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+
+    const clickX = event.clientX - rect.left;
+    const clickY = event.clientY - rect.top;
+
+    const mapX = Math.round((clickX / rect.width) * MAP_WIDTH);
+    const mapY = Math.round((clickY / rect.height) * MAP_HEIGHT);
+
+    setLastClick({ x: mapX, y: mapY });
+    console.log(`x: ${mapX}, y: ${mapY}`);
+  };
+
+  return (
+    <main
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#020617",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "12px",
+        color: "white",
+        overflow: "auto",
+      }}
+    >
+      <div
+        style={{
+          display: "internal",
+          gap: "12px",
+          width: "100%",
+          maxWidth: "2100px",
+          tramsform: "scale(2)",
+          transformOrigin: "center center",
+        }}
+      >
+        <div
+          onClick={handleMapClick}
+          style={{
+            position: "relative",
+            width: "100%",
+            aspectRatio: "1578 / 996",
+            overflow: "hidden",
+            borderRadius: "16px",
+            border: "1px solid #334155",
+            boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+            backgroundColor: "#111827",
+          }}
+        >
+          <img
+            src="/Trioka-and-the-Grey.jpg"
+            alt="Map of Trioka"
+            draggable="false"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              userSelect: "none",
+              pointerEvents: "none",
+            }}
+          />
+
+          {lastClick && (
+            <div
+              style={{
+                position: "absolute",
+                left: "12px",
+                top: "12px",
+                zIndex: 20,
+                backgroundColor: "rgba(0,0,0,0.8)",
+                padding: "8px 12px",
+                borderRadius: "8px",
+                fontSize: "14px",
+              }}
+            >
+              x: {lastClick.x}, y: {lastClick.y}
+            </div>
+          )}
+
+          {cities.map((city) => {
+            const isSelected = selectedCity?.id === city.id;
+
+            return (
+              <button
+                key={city.id}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setSelectedCity(city);
+                }}
+                title={city.name}
+                style={{
+                  position: "absolute",
+                  left: `${(city.x / MAP_WIDTH) * 100}%`,
+                  top: `${(city.y / MAP_HEIGHT) * 100}%`,
+                  transform: "translate(-50%, -50%)",
+                  width: "16px",
+                  height: "16px",
+                  borderRadius: "999px",
+                  border: "2px solid black",
+                  backgroundColor: isSelected ? "#ffee00" : "#8a0606",
+                  boxShadow: isSelected
+                    ? "0 0 0 4px rgba(255, 196, 0, 0.5), 0 4px 10px rgba(0,0,0,0.3)"
+                    : "0 4px 10px rgba(0,0,0,0.3)",
+                  cursor: "pointer",
+                  zIndex: 10,
+                }}
+              />
+            );
+          })}
+        </div>
+
+        <aside
+          style={{
+            width: "500px",
+            minWidth: "280px",
+            backgroundColor: "#3d0f0f",
+            border: "0.5px solid #1a0206",
+            borderRadius: "12px",
+            padding: "20px",
+            boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+          }}
+        >
+          {selectedCity ? (
+            <>
+              <p style={{ color: "#fcd34d", fontSize: "14px", margin: 0 }}>
+                {selectedCity.type}
+              </p>
+
+              <h2 style={{ fontSize: "28px", marginTop: "8px" }}>
+                {selectedCity.name}
+              </h2>
+
+              {selectedCity.portraits && (
+                <img
+                  src={selectedCity.portraits}
+                  alt={`${selectedCity.name} portraits`}
+                  style={{
+                    width: "100%",
+                    height: "300px",
+                    objectFit: "contain",
+                    borderRadius: "6px",
+                    border: "1px solid #3b0b0b",
+                    marginTop: "12px",
+                    marginBottom: "12px",
+                  }}
+                />
+              )}
+
+              <p style={{ color: "#cbd5e1", lineHeight: 1.6 }}>
+                {selectedCity.description}
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 style={{ fontSize: "28px", marginTop: 0 }}>Trioka Map</h2>
+
+              <p style={{ color: "#cbd5e1", lineHeight: 1.6 }}>
+                Click a city marker to view its information.
+              </p>
+
+              <p style={{ color: "#94a3b8", fontSize: "14px", lineHeight: 1.6 }}>
+                Click empty areas of the map to show x/y coordinates for placing
+                new markers.
+              </p>
+            </>
+          )}
+        </aside>
+      </div>
+    </main>
+  );
+}
