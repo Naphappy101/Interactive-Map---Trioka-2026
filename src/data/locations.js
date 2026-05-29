@@ -1,4 +1,4 @@
-const cities = [
+export const cities = [
   {
     id: "beacon",
     name: "Beacon",
