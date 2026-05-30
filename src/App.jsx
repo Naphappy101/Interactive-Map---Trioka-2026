@@ -4,6 +4,38 @@ import { cities } from "./data/locations";
 const MAP_WIDTH = 1578;
 const MAP_HEIGHT = 996;
 
+const getCityMarkerStyle = (city, isSelected) => {
+  const isCapital = city.type === "Capital City";
+
+  return {
+    position: "absolute",
+    left: `${(city.x / MAP_WIDTH) * 100}%`,
+    top: `${(city.y / MAP_HEIGHT) * 100}%`,
+    transform: "translate(-50%, -50%)",
+
+    width: isCapital ? "22px" : "16px",
+    height: isCapital ? "22px" : "16px",
+
+    borderRadius: isCapital ? "4px" : "999px",
+    border: "2px solid black",
+
+    backgroundColor: isSelected
+      ? "#ffee00"
+      : isCapital
+      ? "#d4af37"
+      : "#8a0606",
+
+    boxShadow: isSelected
+      ? "0 0 0 4px rgba(255, 196, 0, 0.5), 0 4px 10px rgba(0,0,0,0.3)"
+      : isCapital
+      ? "0 0 0 3px rgba(212, 175, 55, 0.35), 0 4px 10px rgba(0,0,0,0.35)"
+      : "0 4px 10px rgba(0,0,0,0.3)",
+
+    cursor: "pointer",
+    zIndex: isCapital ? 12 : 10,
+  };
+};
+
 export default function App() {
   const [selectedCity, setSelectedCity] = useState(null);
   const [lastClick, setLastClick] = useState(null);
@@ -100,22 +132,8 @@ export default function App() {
                   setSelectedCity(city);
                 }}
                 title={city.name}
-                style={{
-                  position: "absolute",
-                  left: `${(city.x / MAP_WIDTH) * 100}%`,
-                  top: `${(city.y / MAP_HEIGHT) * 100}%`,
-                  transform: "translate(-50%, -50%)",
-                  width: "16px",
-                  height: "16px",
-                  borderRadius: "999px",
-                  border: "2px solid black",
-                  backgroundColor: isSelected ? "#ffee00" : "#8a0606",
-                  boxShadow: isSelected
-                    ? "0 0 0 4px rgba(255, 196, 0, 0.5), 0 4px 10px rgba(0,0,0,0.3)"
-                    : "0 4px 10px rgba(0,0,0,0.3)",
-                  cursor: "pointer",
-                  zIndex: 10,
-                }}
+                style={getCityMarkerStyle(city, isSelected)
+                }
               />
             );
           })}
