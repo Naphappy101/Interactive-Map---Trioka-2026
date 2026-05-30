@@ -494,4 +494,44 @@ export const cities = [
     description:
       "The second largest city in the Draconic Territories, a hallowed out hill in an ancient forest valley said to once be the nest of a massive dragon.",
   },
+    {
+    id: "eternalvalley",
+    name: "Eternal Valley",
+    type: "Major City",
+    x: 1262,
+    y: 871,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "An ancient valley between the two oldest mountain ranges, said to once be the birthplace of the first dragons.",
+  },
+   {
+    id: "lakefall",
+    name: "Lakefall",
+    type: "Major City",
+    x: 1352,
+    y: 247,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "Lakefall is the largest adventurer enclave built in the ruins of the Magisterium, named for the great city sinking into the lake before it.",
+  },
+    {
+    id: "anchorpoint",
+    name: "Anchor Point",
+    type: "Major City",
+    x: 1510,
+    y: 349,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "Northernmost free harbor on Uldin, considered part of the wildlands, this harbor is a bustling trade and smuggling hub free of any governal oversight.",
+  },
+   {
+    id: "lastrefuge",
+    name: "Last Refuge",
+    type: "Major City",
+    x: 1312,
+    y: 160,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "Surrounded by perils on all sides this is the last bastion of safety in the northern wildlands.",
+  },
 ];
