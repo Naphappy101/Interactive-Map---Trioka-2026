@@ -13,19 +13,19 @@ const getCityMarkerStyle = (city, isSelected) => {
     left: `${(city.x / MAP_WIDTH) * 100}%`,
     top: `${(city.y / MAP_HEIGHT) * 100}%`,
 
-    width: isCapital ? "22px" : isPort ? "18px" : "16px",
-    height: isCapital ? "22px" : isPort ? "18px" : "16px",
+    width: isCapital ? "16px" : isPort ? "14px" : "14px",
+    height: isCapital ? "16px" : isPort ? "14px" : "14px",
 
-    borderRadius: isCapital ? "2px" : "999px",
+    borderRadius: isCapital ? "1px" : "999px",
 
-    border: "2px solid black",
+    border: "1px solid black",
 
     backgroundColor: isSelected
       ? "#ffee00"
       : isCapital
-      ? "#d4af37"
+      ? "#b48e10"
       : isPort
-      ? "#0891b2"
+      ? "#052f88"
       : "#8a0606",
 
     transform: isCapital
@@ -33,9 +33,9 @@ const getCityMarkerStyle = (city, isSelected) => {
       : "translate(-50%, -50%)",
 
     boxShadow: isSelected
-      ? "0 0 0 4px rgba(255, 196, 0, 0.5), 0 4px 10px rgba(0,0,0,0.3)"
+      ? "0 0 0 4px rgba(255, 196, 0, 0.75), 0 4px 10px rgba(0,0,0,0.3)"
       : isCapital
-      ? "0 0 0 3px rgba(212, 175, 55, 0.35), 0 4px 10px rgba(0,0,0,0.35)"
+      ? "0 0 0 3px rgba(212, 175, 55, 0.5), 0 4px 10px rgba(0,0,0,0.35)"
       : isPort
       ? "0 0 0 3px rgba(8, 145, 178, 0.35), 0 4px 10px rgba(0,0,0,0.35)"
       : "0 4px 10px rgba(0,0,0,0.3)",
