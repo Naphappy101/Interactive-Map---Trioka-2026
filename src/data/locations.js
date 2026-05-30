@@ -454,4 +454,44 @@ export const cities = [
     description:
       "The largest port for ruffians, pirates, and smugglers in the world. Near the far edge of the world on the underbelly of the least travelled kingdom, is the largest and most sought after escape for pirates, thieves, and criminals of all kind.",
   },
+   {
+    id: "throgarthrum",
+    name: "Throgarthrum",
+    type: "Major City",
+    x: 1401,
+    y: 586,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "Largest trading hub in the southern reaches of the Sundrin Empire.",
+  },
+   {
+    id: "ogrilswake",
+    name: "Ogrilswake",
+    type: "Major City",
+    x: 1330,
+    y: 649,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "Major military port for the Sundrin Empire.",
+  },
+   {
+    id: "krakensmaw",
+    name: "Krakensmaw",
+    type: "Major City",
+    x: 1418,
+    y: 678,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "Southernmost Major Harbor city in the Sundrin Empire, said to be shaped like a kraken's maw.",
+  },
+   {
+    id: "slumberhall",
+    name: "Slumber Hall",
+    type: "Major City",
+    x: 1098,
+    y: 860,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "The second largest city in the Draconic Territories, a hallowed out hill in an ancient forest valley said to once be the nest of a massive dragon.",
+  },
 ];
