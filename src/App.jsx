@@ -13,16 +13,16 @@ const getCityMarkerStyle = (city, isSelected) => {
     top: `${(city.y / MAP_HEIGHT) * 100}%`,
     transform: "translate(-50%, -50%)",
 
-    width: isCapital ? "22px" : "16px",
-    height: isCapital ? "22px" : "16px",
+    width: isCapital ? "18px" : "14px",
+    height: isCapital ? "18px" : "14px",
 
     borderRadius: isCapital ? "4px" : "999px",
-    border: "2px solid black",
+    border: "0.5px solid black",
 
     backgroundColor: isSelected
-      ? "#ffee00"
+      ? "#fbff00"
       : isCapital
-      ? "#d4af37"
+      ? "#d80000b7"
       : "#8a0606",
 
     boxShadow: isSelected
