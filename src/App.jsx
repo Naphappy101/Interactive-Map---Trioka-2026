@@ -6,33 +6,42 @@ const MAP_HEIGHT = 996;
 
 const getCityMarkerStyle = (city, isSelected) => {
   const isCapital = city.type === "Capital City";
+  const isPort = portCityIds.includes(city.id);
 
   return {
     position: "absolute",
     left: `${(city.x / MAP_WIDTH) * 100}%`,
     top: `${(city.y / MAP_HEIGHT) * 100}%`,
-    transform: "translate(-50%, -50%)",
 
-    width: isCapital ? "18px" : "14px",
-    height: isCapital ? "18px" : "14px",
+    width: isCapital ? "22px" : isPort ? "18px" : "16px",
+    height: isCapital ? "22px" : isPort ? "18px" : "16px",
 
-    borderRadius: isCapital ? "4px" : "999px",
-    border: "0.5px solid black",
+    borderRadius: isCapital ? "2px" : "999px",
+
+    border: "2px solid black",
 
     backgroundColor: isSelected
-      ? "#fbff00"
+      ? "#ffee00"
       : isCapital
-      ? "#d80000b7"
+      ? "#d4af37"
+      : isPort
+      ? "#0891b2"
       : "#8a0606",
+
+    transform: isCapital
+      ? "translate(-50%, -50%) rotate(45deg)"
+      : "translate(-50%, -50%)",
 
     boxShadow: isSelected
       ? "0 0 0 4px rgba(255, 196, 0, 0.5), 0 4px 10px rgba(0,0,0,0.3)"
       : isCapital
       ? "0 0 0 3px rgba(212, 175, 55, 0.35), 0 4px 10px rgba(0,0,0,0.35)"
+      : isPort
+      ? "0 0 0 3px rgba(8, 145, 178, 0.35), 0 4px 10px rgba(0,0,0,0.35)"
       : "0 4px 10px rgba(0,0,0,0.3)",
 
     cursor: "pointer",
-    zIndex: isCapital ? 12 : 10,
+    zIndex: isCapital ? 13 : isPort ? 12 : 10,
   };
 };
 
