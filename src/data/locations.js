@@ -404,4 +404,54 @@ export const cities = [
     description:
       "The northern most major city in the Kingdom of Arpad.",
   },
+   {
+    id: "ganymede",
+    name: "Ganymede",
+    type: "Major City",
+    x: 866,
+    y: 182,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "The second largest city in the Kingdom of Arpad and major trading hub. Sitting just off the coast of Lake Ganymede.",
+  },
+   {
+    id: "druidian'srest",
+    name: "Druidian's Rest",
+    type: "Major City",
+    x:551,
+    y: 704,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "Deep in the Ironwood Forest is the home of Druids and Woodland elves alike.",
+  },
+   {
+    id: "dragonisle",
+    name: "Dragon Isle",
+    type: "Major City",
+    x: 1015,
+    y: 818,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "A major port isle just off the coast of the Draconic Territories, a massive and bustling trade hub of activity.",
+  },
+   {
+    id: "desert'smouth",
+    name: "Desert's Mouth",
+    type: "Major City",
+    x: 1176,
+    y: 734,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "The largest harbor in the Kingdom of the Wastes and northernmost major city in the region.",
+  },
+   {
+    id: "bootybay",
+    name: "Booty Bay",
+    type: "Major City",
+    x: 1413,
+    y: 910,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "The largest port for ruffians, pirates, and smugglers in the world. Near the far edge of the world on the underbelly of the least travelled kingdom, is the largest and most sought after escape for pirates, thieves, and criminals of all kind.",
+  },
 ];
