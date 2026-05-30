@@ -6,7 +6,7 @@ const MAP_HEIGHT = 996;
 
 const getCityMarkerStyle = (city, isSelected) => {
   const isCapital = city.type === "Capital City";
-  const isPort = portCityIds.includes(city.id);
+  const isPort = city.isPort === true;
 
   return {
     position: "absolute",
