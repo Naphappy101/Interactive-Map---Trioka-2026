@@ -220,7 +220,7 @@ export const cities = [
     type: "Major City",
     x: 636,
     y: 503,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Dawnguard.jpg",
     description:
       "The fortress city and last major hub of the dwarves before exiting their domain.",
   },
@@ -340,7 +340,7 @@ export const cities = [
     type: "Major City",
     x: 694,
     y: 40,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Whitewake.jpg",
     description:
       "Northmost harbor in Ostirose, often frozen solid in the winter and excessible only by the northern road.",
   },
@@ -350,7 +350,7 @@ export const cities = [
     type: "Major City",
     x: 1032,
     y: 177,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/CapeSaffar.jpg",
     description:
       "The Kingdom of Arpad's only major port city.",
   },
@@ -360,7 +360,7 @@ export const cities = [
     type: "Major City",
     x: 969,
     y: 295,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/NorthCastleport.jpg",
     description:
       "The largest military garrison and fortified port city in Lyth.",
   },
