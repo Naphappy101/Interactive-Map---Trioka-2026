@@ -474,7 +474,7 @@ export const cities = [
     isPort: true,
     x: 1015,
     y: 818,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/DragonIsles.jpg",
     description:
       "A major port isle just off the coast of the Draconic Territories, a massive and bustling trade hub of activity.",
   },
@@ -485,7 +485,7 @@ export const cities = [
     isPort: true,
     x: 1176,
     y: 734,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Desert'sMouth.jpg",
     description:
       "The largest harbor in the Kingdom of the Wastes and northernmost major city in the region.",
   },
@@ -496,7 +496,7 @@ export const cities = [
     isPort: true,
     x: 1413,
     y: 910,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/BootyBay.jpg",
     description:
       "The largest port for ruffians, pirates, and smugglers in the world. Near the far edge of the world on the underbelly of the least travelled kingdom, is the largest and most sought after escape for pirates, thieves, and criminals of all kind.",
   },
