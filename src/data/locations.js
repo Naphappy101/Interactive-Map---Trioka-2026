@@ -463,7 +463,7 @@ export const cities = [
     isPort: false,
     x:551,
     y: 704,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Druidian'sRest.jpg",
     description:
       "Deep in the Ironwood Forest is the home of Druids and Woodland elves alike.",
   },
