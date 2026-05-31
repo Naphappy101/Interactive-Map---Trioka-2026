@@ -45,6 +45,78 @@ const getCityMarkerStyle = (city, isSelected) => {
   };
 };
 
+function MapKey() {
+  return (
+    <aside
+      style={{
+        width: "500px",
+        minWidth: "280px",
+        backgroundColor: "#3d0f0f",
+        color: "#cbd5e1",
+        border: "0.5px solid #1a0206",
+        borderRadius: "12px",
+        padding: "20px",
+        boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+      }}
+    >
+      <h2 style={{ fontSize: "28px", marginTop: 0 }}>Map Key</h2>
+
+      <div style={{ display: "grid", gap: "14px", fontSize: "15px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <span
+            style={{
+              width: "16px",
+              height: "16px",
+              backgroundColor: "#b48e10",
+              border: "1px solid black",
+              transform: "rotate(45deg)",
+              boxShadow: "0 0 0 3px rgba(212, 175, 55, 0.5)",
+              display: "inline-block",
+            }}
+          />
+          <span>Capital City</span>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <span
+            style={{
+              width: "14px",
+              height: "14px",
+              backgroundColor: "#052f88",
+              border: "1px solid black",
+              borderRadius: "999px",
+              boxShadow: "0 0 0 3px rgba(8, 145, 178, 0.35)",
+              display: "inline-block",
+            }}
+          />
+          <span>Port City</span>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <span
+            style={{
+              width: "14px",
+              height: "14px",
+              backgroundColor: "#8a0606",
+              border: "1px solid black",
+              borderRadius: "999px",
+              display: "inline-block",
+            }}
+          />
+          <span>Major City</span>
+        </div>
+
+        <hr style={{ width: "100%", borderColor: "#cbd5e1" }} />
+
+        <p style={{ color: "#94a3b8", lineHeight: 1.5, margin: 0 }}>
+          Future key entries can include roads, trade routes, sea routes,
+          regional borders, ruins, and landmarks.
+        </p>
+      </div>
+    </aside>
+  );
+}
+
 export default function App() {
   const [selectedCity, setSelectedCity] = useState(null);
   const [lastClick, setLastClick] = useState(null);
@@ -77,11 +149,11 @@ export default function App() {
     >
       <div
         style={{
-          display: "internal",
+          display: "block",
           gap: "12px",
           width: "100%",
           maxWidth: "2100px",
-          tramsform: "scale(2)",
+          transform: "scale(1)",
           transformOrigin: "center center",
         }}
       >
@@ -141,69 +213,87 @@ export default function App() {
                   setSelectedCity(city);
                 }}
                 title={city.name}
-                style={getCityMarkerStyle(city, isSelected)
-                }
+                style={getCityMarkerStyle(city, isSelected)}
               />
             );
           })}
         </div>
 
-        <aside
+        <div
           style={{
-            width: "500px",
-            minWidth: "280px",
-            backgroundColor: "#3d0f0f",
-            border: "0.5px solid #1a0206",
-            borderRadius: "12px",
-            padding: "20px",
-            boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+            display: "flex",
+            gap: "12px",
+            width: "100%",
+            marginTop: "12px",
+            alignItems: "stretch",
+            justifyContent: "space-between",
           }}
         >
-          {selectedCity ? (
-            <>
-              <p style={{ color: "#fcd34d", fontSize: "14px", margin: 0 }}>
-                {selectedCity.type}
-              </p>
+          <aside
+            style={{
+              width: "500px",
+              minWidth: "280px",
+              backgroundColor: "#3d0f0f",
+              border: "0.5px solid #1a0206",
+              borderRadius: "12px",
+              padding: "20px",
+              boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+            }}
+          >
+            {selectedCity ? (
+              <>
+                <p style={{ color: "#fcd34d", fontSize: "14px", margin: 0 }}>
+                  {selectedCity.type}
+                </p>
 
-              <h2 style={{ fontSize: "28px", marginTop: "8px" }}>
-                {selectedCity.name}
-              </h2>
+                <h2 style={{ fontSize: "28px", marginTop: "8px" }}>
+                  {selectedCity.name}
+                </h2>
 
-              {selectedCity.portraits && (
-                <img
-                  src={selectedCity.portraits}
-                  alt={`${selectedCity.name} portraits`}
+                {selectedCity.portraits && (
+                  <img
+                    src={selectedCity.portraits}
+                    alt={`${selectedCity.name} portraits`}
+                    style={{
+                      width: "100%",
+                      height: "300px",
+                      objectFit: "contain",
+                      borderRadius: "6px",
+                      border: "1px solid #3b0b0b",
+                      marginTop: "12px",
+                      marginBottom: "12px",
+                    }}
+                  />
+                )}
+
+                <p style={{ color: "#cbd5e1", lineHeight: 1.6 }}>
+                  {selectedCity.description}
+                </p>
+              </>
+            ) : (
+              <>
+                <h2 style={{ fontSize: "28px", marginTop: 0 }}>Trioka Map</h2>
+
+                <p style={{ color: "#cbd5e1", lineHeight: 1.6 }}>
+                  Click a city marker to view its information.
+                </p>
+
+                <p
                   style={{
-                    width: "100%",
-                    height: "300px",
-                    objectFit: "contain",
-                    borderRadius: "6px",
-                    border: "1px solid #3b0b0b",
-                    marginTop: "12px",
-                    marginBottom: "12px",
+                    color: "#94a3b8",
+                    fontSize: "14px",
+                    lineHeight: 1.6,
                   }}
-                />
-              )}
+                >
+                  Click empty areas of the map to show x/y coordinates for
+                  placing new markers.
+                </p>
+              </>
+            )}
+          </aside>
 
-              <p style={{ color: "#cbd5e1", lineHeight: 1.6 }}>
-                {selectedCity.description}
-              </p>
-            </>
-          ) : (
-            <>
-              <h2 style={{ fontSize: "28px", marginTop: 0 }}>Trioka Map</h2>
-
-              <p style={{ color: "#cbd5e1", lineHeight: 1.6 }}>
-                Click a city marker to view its information.
-              </p>
-
-              <p style={{ color: "#94a3b8", fontSize: "14px", lineHeight: 1.6 }}>
-                Click empty areas of the map to show x/y coordinates for placing
-                new markers.
-              </p>
-            </>
-          )}
-        </aside>
+          <MapKey />
+        </div>
       </div>
     </main>
   );
