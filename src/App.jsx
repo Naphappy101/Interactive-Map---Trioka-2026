@@ -1,50 +1,87 @@
 import { useState } from "react";
 import { cities } from "./data/locations";
 
+/*
+  Base map size.
+  Numbers match the actual image size.
+  Used to convert city x/y coordinates into percentages.
+*/
 const MAP_WIDTH = 1578;
 const MAP_HEIGHT = 996;
 
-const getCityMarkerStyle = (city, isSelected) => {
+/*
+  City marker styling.
+  Capital cities = gold diamond.
+  Port cities = blue circle.
+  Major cities = red circle.
+  Selected cities = yellow glow.
+*/
+function getCityMarkerStyle(city, isSelected) {
   const isCapital = city.type === "Capital City";
   const isPort = city.isPort === true;
 
+  const leftPosition = `${(city.x / MAP_WIDTH) * 100}%`;
+  const topPosition = `${(city.y / MAP_HEIGHT) * 100}%`;
+
+  let markerSize = "14px";
+  let markerShape = "999px";
+  let markerColor = "#8a0606";
+  let markerTransform = "translate(-50%, -50%)";
+  let markerShadow = "0 4px 10px rgba(0,0,0,0.3)";
+  let markerZIndex = 10;
+
+  if (isCapital) {
+    markerSize = "16px";
+    markerShape = "1px";
+    markerColor = "#b48e10";
+    markerTransform = "translate(-50%, -50%) rotate(45deg)";
+    markerShadow =
+      "0 0 0 3px rgba(212, 175, 55, 0.5), 0 4px 10px rgba(0,0,0,0.35)";
+    markerZIndex = 13;
+  }
+
+  if (isPort) {
+    markerSize = "14px";
+    markerShape = "999px";
+    markerColor = "#052f88";
+    markerTransform = "translate(-50%, -50%)";
+    markerShadow =
+      "0 0 0 3px rgba(8, 145, 178, 0.35), 0 4px 10px rgba(0,0,0,0.35)";
+    markerZIndex = 12;
+  }
+
+  if (isSelected) {
+    markerColor = "#ffee00";
+    markerShadow =
+      "0 0 0 4px rgba(255, 196, 0, 0.75), 0 4px 10px rgba(0,0,0,0.3)";
+  }
+
   return {
     position: "absolute",
-    left: `${(city.x / MAP_WIDTH) * 100}%`,
-    top: `${(city.y / MAP_HEIGHT) * 100}%`,
+    left: leftPosition,
+    top: topPosition,
 
-    width: isCapital ? "16px" : isPort ? "14px" : "14px",
-    height: isCapital ? "16px" : isPort ? "14px" : "14px",
+    width: markerSize,
+    height: markerSize,
 
-    borderRadius: isCapital ? "1px" : "999px",
-
+    borderRadius: markerShape,
     border: "1px solid black",
 
-    backgroundColor: isSelected
-      ? "#ffee00"
-      : isCapital
-      ? "#b48e10"
-      : isPort
-      ? "#052f88"
-      : "#8a0606",
-
-    transform: isCapital
-      ? "translate(-50%, -50%) rotate(45deg)"
-      : "translate(-50%, -50%)",
-
-    boxShadow: isSelected
-      ? "0 0 0 4px rgba(255, 196, 0, 0.75), 0 4px 10px rgba(0,0,0,0.3)"
-      : isCapital
-      ? "0 0 0 3px rgba(212, 175, 55, 0.5), 0 4px 10px rgba(0,0,0,0.35)"
-      : isPort
-      ? "0 0 0 3px rgba(8, 145, 178, 0.35), 0 4px 10px rgba(0,0,0,0.35)"
-      : "0 4px 10px rgba(0,0,0,0.3)",
+    backgroundColor: markerColor,
+    transform: markerTransform,
+    boxShadow: markerShadow,
 
     cursor: "pointer",
-    zIndex: isCapital ? 13 : isPort ? 12 : 10,
+    zIndex: markerZIndex,
   };
-};
+}
 
+/*
+  Map key panel.
+  Static currently.
+  Explains what the map symbols mean.
+  Later this can hold roads, trade routes, sea routes, borders, etc.
+*/
 function MapKey() {
   return (
     <aside
@@ -59,10 +96,30 @@ function MapKey() {
         boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
       }}
     >
-      <h2 style={{ fontSize: "28px", marginTop: 0 }}>Map Key</h2>
+      <h2
+        style={{
+          fontSize: "28px",
+          marginTop: 0,
+        }}
+      >
+        Map Key
+      </h2>
 
-      <div style={{ display: "grid", gap: "14px", fontSize: "15px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+      <div
+        style={{
+          display: "grid",
+          gap: "14px",
+          fontSize: "15px",
+        }}
+      >
+        {/* Capital city symbol */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+          }}
+        >
           <span
             style={{
               width: "16px",
@@ -74,10 +131,18 @@ function MapKey() {
               display: "inline-block",
             }}
           />
+
           <span>Capital City</span>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        {/* Port city symbol */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+          }}
+        >
           <span
             style={{
               width: "14px",
@@ -89,10 +154,18 @@ function MapKey() {
               display: "inline-block",
             }}
           />
+
           <span>Port City</span>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        {/* Major city symbol */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+          }}
+        >
           <span
             style={{
               width: "14px",
@@ -103,36 +176,76 @@ function MapKey() {
               display: "inline-block",
             }}
           />
+
           <span>Major City</span>
         </div>
 
-        <hr style={{ width: "100%", borderColor: "#cbd5e1" }} />
+        <hr
+          style={{
+            width: "100%",
+            borderColor: "#cbd5e1",
+          }}
+        />
 
-        <p style={{ color: "#94a3b8", lineHeight: 1.5, margin: 0 }}>
+        <p
+          style={{
+            color: "#94a3b8",
+            lineHeight: 1.5,
+            margin: 0,
+          }}
+        >
           Future key entries can include roads, trade routes, sea routes,
-          regional borders, ruins, and landmarks.
+          regional borders, and landmarks.
         </p>
       </div>
     </aside>
   );
 }
 
+/*
+  Main app.
+  Holds the map.
+  Holds the city panel.
+  Holds the map key.
+*/
 export default function App() {
+  /*
+    Selected city.
+    Starts empty.
+    Fills when a city marker is clicked.
+  */
   const [selectedCity, setSelectedCity] = useState(null);
+
+  /*
+    Last clicked map coordinate.
+    Used for finding x/y positions.
+    Can be helpful when placing new cities(for dev mostly).
+  */
   const [lastClick, setLastClick] = useState(null);
 
-  const handleMapClick = (event) => {
-    const rect = event.currentTarget.getBoundingClientRect();
+  /*
+    Map click handler.
+    Reads where the user clicked.
+    Converts screen position into map x/y coordinates.
+    Logs the result for marker placement.
+  */
+  function handleMapClick(event) {
+    const mapElement = event.currentTarget;
+    const mapRectangle = mapElement.getBoundingClientRect();
 
-    const clickX = event.clientX - rect.left;
-    const clickY = event.clientY - rect.top;
+    const clickX = event.clientX - mapRectangle.left;
+    const clickY = event.clientY - mapRectangle.top;
 
-    const mapX = Math.round((clickX / rect.width) * MAP_WIDTH);
-    const mapY = Math.round((clickY / rect.height) * MAP_HEIGHT);
+    const mapX = Math.round((clickX / mapRectangle.width) * MAP_WIDTH);
+    const mapY = Math.round((clickY / mapRectangle.height) * MAP_HEIGHT);
 
-    setLastClick({ x: mapX, y: mapY });
+    setLastClick({
+      x: mapX,
+      y: mapY,
+    });
+
     console.log(`x: ${mapX}, y: ${mapY}`);
-  };
+  }
 
   return (
     <main
@@ -147,6 +260,7 @@ export default function App() {
         overflow: "auto",
       }}
     >
+      {/* Page wrapper */}
       <div
         style={{
           display: "block",
@@ -157,6 +271,7 @@ export default function App() {
           transformOrigin: "center center",
         }}
       >
+        {/* Map container */}
         <div
           onClick={handleMapClick}
           style={{
@@ -170,6 +285,7 @@ export default function App() {
             backgroundColor: "#111827",
           }}
         >
+          {/* Map image */}
           <img
             src="/Trioka-and-the-Grey.jpg"
             alt="Map of Trioka"
@@ -185,6 +301,7 @@ export default function App() {
             }}
           />
 
+          {/* Coordinate display */}
           {lastClick && (
             <div
               style={{
@@ -202,23 +319,25 @@ export default function App() {
             </div>
           )}
 
+          {/* City markers */}
           {cities.map((city) => {
             const isSelected = selectedCity?.id === city.id;
 
             return (
               <button
                 key={city.id}
+                title={city.name}
+                style={getCityMarkerStyle(city, isSelected)}
                 onClick={(event) => {
                   event.stopPropagation();
                   setSelectedCity(city);
                 }}
-                title={city.name}
-                style={getCityMarkerStyle(city, isSelected)}
               />
             );
           })}
         </div>
 
+        {/* Bottom panels */}
         <div
           style={{
             display: "flex",
@@ -229,6 +348,7 @@ export default function App() {
             justifyContent: "space-between",
           }}
         >
+          {/* City information panel */}
           <aside
             style={{
               width: "500px",
@@ -242,14 +362,28 @@ export default function App() {
           >
             {selectedCity ? (
               <>
-                <p style={{ color: "#fcd34d", fontSize: "14px", margin: 0 }}>
+                {/* City type */}
+                <p
+                  style={{
+                    color: "#fcd34d",
+                    fontSize: "14px",
+                    margin: 0,
+                  }}
+                >
                   {selectedCity.type}
                 </p>
 
-                <h2 style={{ fontSize: "28px", marginTop: "8px" }}>
+                {/* City name */}
+                <h2
+                  style={{
+                    fontSize: "28px",
+                    marginTop: "8px",
+                  }}
+                >
                   {selectedCity.name}
                 </h2>
 
+                {/* City image */}
                 {selectedCity.portraits && (
                   <img
                     src={selectedCity.portraits}
@@ -266,15 +400,34 @@ export default function App() {
                   />
                 )}
 
-                <p style={{ color: "#cbd5e1", lineHeight: 1.6 }}>
+                {/* City description */}
+                <p
+                  style={{
+                    color: "#cbd5e1",
+                    lineHeight: 1.6,
+                  }}
+                >
                   {selectedCity.description}
                 </p>
               </>
             ) : (
               <>
-                <h2 style={{ fontSize: "28px", marginTop: 0 }}>Trioka Map</h2>
+                {/* Default panel */}
+                <h2
+                  style={{
+                    fontSize: "28px",
+                    marginTop: 0,
+                  }}
+                >
+                  Trioka Map
+                </h2>
 
-                <p style={{ color: "#cbd5e1", lineHeight: 1.6 }}>
+                <p
+                  style={{
+                    color: "#cbd5e1",
+                    lineHeight: 1.6,
+                  }}
+                >
                   Click a city marker to view its information.
                 </p>
 
@@ -292,6 +445,7 @@ export default function App() {
             )}
           </aside>
 
+          {/* Static map key */}
           <MapKey />
         </div>
       </div>

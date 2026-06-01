@@ -540,9 +540,9 @@ export const cities = [
     isPort: false,
     x: 1098,
     y: 860,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/SlumberHall.jpg",
     description:
-      "The second largest city in the Draconic Territories, a hallowed out hill in an ancient forest valley said to once be the nest of a massive dragon.",
+      "The second largest city in the Draconic Territories, a hollowed out hill in an ancient forest valley said to once be the nest of a massive dragon.",
   },
     {
     id: "eternalvalley",
