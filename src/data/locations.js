@@ -551,7 +551,7 @@ export const cities = [
     isPort: false,
     x: 1262,
     y: 871,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/EternalValley.jpg",
     description:
       "An ancient valley between the two oldest mountain ranges, said to once be the birthplace of the first dragons.",
   },
