@@ -11,12 +11,11 @@ const MAP_HEIGHT = 996;
 
 /*
   City marker styling.
-  Capital cities = gold diamond.
-  Port cities = blue circle.
-  Major cities = red circle.
-  Selected cities = yellow glow.
+  Controls marker position, size, and click area.
+  Icon image controls the actual symbol appearance.
+  Selected cities get a larger glow from the image filter.
 */
-function getCityMarkerStyle(city, isSelected) {
+function getCityMarkerStyle(city) {
   const isCapital = city.type === "Capital City";
   const isPort = city.isPort === true;
   const isCapitalPort = isCapital && isPort;
@@ -24,47 +23,23 @@ function getCityMarkerStyle(city, isSelected) {
   const leftPosition = `${(city.x / MAP_WIDTH) * 100}%`;
   const topPosition = `${(city.y / MAP_HEIGHT) * 100}%`;
 
-  let markerSize = "14px";
-  let markerShape = "999px";
-  let markerColor = "#8a0606";
-  let markerTransform = "translate(-50%, -50%)";
-  let markerShadow = "0 4px 10px rgba(0,0,0,0.3)";
+  let markerSize = "16px";
   let markerZIndex = 10;
 
+  /*
+    Capital port cities use the same size as capital cities.
+    They get the highest z-index because they are the most important symbol.
+  */
   if (isCapitalPort) {
-    markerSize = "16px";
-    markerShape = "1px";
-    markerColor = "#ffffff";
-    markerTransform = "translate(-50%, -50%) rotate(45deg)";
-    markerShadow =
-    "0 0 0 3px rgba(182, 219, 228, 0.45), 0 4px 10px rgba(0,0,0,0.35)";
+    markerSize = "20px";
     markerZIndex = 14;
-  }
-  else if (isCapital) {
-    markerSize = "16px";
-    markerShape = "1px";
-    markerColor = "#b48e10";
-    markerTransform = "translate(-50%, -50%) rotate(45deg)";
-    markerShadow =
-      "0 0 0 3px rgba(212, 175, 55, 0.5), 0 4px 10px rgba(0,0,0,0.35)";
+  } else if (isCapital) {
+    markerSize = "20px";
     markerZIndex = 13;
-  }
-  else if (isPort) {
-    markerSize = "14px";
-    markerShape = "999px";
-    markerColor = "#052f88";
-    markerTransform = "translate(-50%, -50%)";
-    markerShadow =
-      "0 0 0 3px rgba(8, 145, 178, 0.35), 0 4px 10px rgba(0,0,0,0.35)";
+  } else if (isPort) {
+    markerSize = "18px";
     markerZIndex = 12;
   }
-
-  if (isSelected) {
-    markerColor = "#ffee00";
-    markerShadow =
-      "0 0 0 4px rgba(255, 196, 0, 0.75), 0 4px 10px rgba(0,0,0,0.3)";
-  }
-
   return {
     position: "absolute",
     left: leftPosition,
@@ -73,16 +48,81 @@ function getCityMarkerStyle(city, isSelected) {
     width: markerSize,
     height: markerSize,
 
-    borderRadius: markerShape,
-    border: "1px solid black",
+    /*
+      Center marker on its x/y coordinate.
+      Do not rotate here.
+      The SVG file itself should control the symbol shape.
+    */
+    transform: "translate(-50%, -50%)",
 
-    backgroundColor: markerColor,
-    transform: markerTransform,
-    boxShadow: markerShadow,
+    /*
+      Remove default button styling.
+      Keeps only the icon image visible.
+    */
+    padding: 0,
+    border: "none",
+    backgroundColor: "transparent",
 
     cursor: "pointer",
     zIndex: markerZIndex,
   };
+}
+
+/*
+  City icon selection.
+  Capital ports are checked first.
+  This lets capital port symbols override normal capital and port symbols.
+*/
+function getCityIcon(city) {
+  const isCapital = city.type === "Capital City";
+  const isPort = city.isPort === true;
+
+  if (isCapital && isPort) {
+    return "/icons/capitalport.svg";
+  }
+
+  if (isCapital) {
+    return "/icons/capital.svg";
+  }
+
+  if (isPort) {
+    return "/icons/port.svg";
+  }
+
+  return "/icons/majorcity.svg";
+}
+
+/*
+  Map key item.
+  Keeps each icon row consistent.
+  Used by the static map key panel.
+*/
+function MapKeyItem({ icon, label }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+      }}
+    >
+      <img
+        src={icon}
+        alt=""
+        draggable="false"
+        style={{
+          width: "22px",
+          height: "22px",
+          objectFit: "contain",
+          userSelect: "none",
+          pointerEvents: "none",
+          filter: "drop-shadow(0 3px 4px rgba(0, 0, 0, 0.65))",
+        }}
+      />
+
+      <span>{label}</span>
+    </div>
+  );
 }
 
 /*
@@ -122,95 +162,28 @@ function MapKey() {
         }}
       >
         {/* Capital port city symbol */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-          }}
-        >
-          <span
-            style={{
-              width: "16px",
-              height: "16px",
-              backgroundColor: "#ffffff",
-              border: "1px solid black",
-              transform: "rotate(45deg)",
-              boxShadow: "0 0 0 3px rgba(182, 219, 228, 0.45)",
-              display: "inline-block",
-            }}
-          />
+        <MapKeyItem
+          icon="/icons/capitalport.svg"
+          label="Capital Port City"
+        />
 
-          <span>Capital Port City</span>
-        </div>
         {/* Capital city symbol */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-          }}
-        >
-          <span
-            style={{
-              width: "16px",
-              height: "16px",
-              backgroundColor: "#b48e10",
-              border: "1px solid black",
-              transform: "rotate(45deg)",
-              boxShadow: "0 0 0 3px rgba(212, 175, 55, 0.5)",
-              display: "inline-block",
-            }}
-          />
-
-          <span>Capital City</span>
-        </div>
+        <MapKeyItem
+          icon="/icons/capital.svg"
+          label="Capital City"
+        />
 
         {/* Port city symbol */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-          }}
-        >
-          <span
-            style={{
-              width: "14px",
-              height: "14px",
-              backgroundColor: "#052f88",
-              border: "1px solid black",
-              borderRadius: "999px",
-              boxShadow: "0 0 0 3px rgba(8, 145, 178, 0.35)",
-              display: "inline-block",
-            }}
-          />
-
-
-          <span>Port City</span>
-        </div>
+        <MapKeyItem
+          icon="/icons/port.svg"
+          label="Port City"
+        />
 
         {/* Major city symbol */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-          }}
-        >
-          <span
-            style={{
-              width: "14px",
-              height: "14px",
-              backgroundColor: "#8a0606",
-              border: "1px solid black",
-              borderRadius: "999px",
-              display: "inline-block",
-            }}
-          />
-
-          <span>Major City</span>
-        </div>
+        <MapKeyItem
+          icon="/icons/majorcity.svg"
+          label="Major City"
+        />
 
         <hr
           style={{
@@ -359,12 +332,30 @@ export default function App() {
               <button
                 key={city.id}
                 title={city.name}
-                style={getCityMarkerStyle(city, isSelected)}
+                style={getCityMarkerStyle(city)}
                 onClick={(event) => {
                   event.stopPropagation();
                   setSelectedCity(city);
                 }}
-              />
+              >
+                <img
+                  src={getCityIcon(city)}
+                  alt=""
+                  draggable="false"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                    pointerEvents: "none",
+                    userSelect: "none",
+                    transition: "filter 160ms ease, transform 160ms ease",
+                    transform: isSelected ? "scale(1.25)" : "scale(1)",
+                    filter: isSelected
+                      ? "drop-shadow(0 0 6px rgba(255, 238, 0, 0.95)) drop-shadow(0 0 12px rgba(255, 196, 0, 0.9))"
+                      : "drop-shadow(0 3px 4px rgba(0, 0, 0, 0.65))",
+                  }}
+                />
+              </button>
             );
           })}
         </div>
