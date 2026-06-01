@@ -19,6 +19,7 @@ const MAP_HEIGHT = 996;
 function getCityMarkerStyle(city, isSelected) {
   const isCapital = city.type === "Capital City";
   const isPort = city.isPort === true;
+  const isCapitalPort = isCapital && isPort;
 
   const leftPosition = `${(city.x / MAP_WIDTH) * 100}%`;
   const topPosition = `${(city.y / MAP_HEIGHT) * 100}%`;
@@ -30,7 +31,16 @@ function getCityMarkerStyle(city, isSelected) {
   let markerShadow = "0 4px 10px rgba(0,0,0,0.3)";
   let markerZIndex = 10;
 
-  if (isCapital) {
+  if (isCapitalPort) {
+    markerSize = "16px";
+    markerShape = "1px";
+    markerColor = "#ffffff";
+    markerTransform = "translate(-50%, -50%) rotate(45deg)";
+    markerShadow =
+    "0 0 0 3px rgba(182, 219, 228, 0.45), 0 4px 10px rgba(0,0,0,0.35)";
+    markerZIndex = 14;
+  }
+  else if (isCapital) {
     markerSize = "16px";
     markerShape = "1px";
     markerColor = "#b48e10";
@@ -39,8 +49,7 @@ function getCityMarkerStyle(city, isSelected) {
       "0 0 0 3px rgba(212, 175, 55, 0.5), 0 4px 10px rgba(0,0,0,0.35)";
     markerZIndex = 13;
   }
-
-  if (isPort) {
+  else if (isPort) {
     markerSize = "14px";
     markerShape = "999px";
     markerColor = "#052f88";
@@ -112,6 +121,28 @@ function MapKey() {
           fontSize: "15px",
         }}
       >
+        {/* Capital port city symbol */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+          }}
+        >
+          <span
+            style={{
+              width: "16px",
+              height: "16px",
+              backgroundColor: "#ffffff",
+              border: "1px solid black",
+              transform: "rotate(45deg)",
+              boxShadow: "0 0 0 3px rgba(182, 219, 228, 0.45)",
+              display: "inline-block",
+            }}
+          />
+
+          <span>Capital Port City</span>
+        </div>
         {/* Capital city symbol */}
         <div
           style={{
@@ -154,6 +185,7 @@ function MapKey() {
               display: "inline-block",
             }}
           />
+
 
           <span>Port City</span>
         </div>

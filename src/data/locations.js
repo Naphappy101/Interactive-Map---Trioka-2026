@@ -173,13 +173,13 @@ export const cities = [
   {
     id: "the-nest",
     name: "The Nest",
-    type: "Capital City",
+    type: "Major City",
     isPort: true,
     x: 1289,
     y: 968,
     portraits: "/portraits/TheNestDraconicTerritoriescapital.jpg",
     description:
-      "Ancient home of dragons and now seat of power in the Draconic Territories.",
+      "Ancient home of dragons and only major port on the southern coast of the Draconic Territories.",
   },
   {
     id: "oasirath",
@@ -547,7 +547,7 @@ export const cities = [
     {
     id: "eternalvalley",
     name: "Eternal Valley",
-    type: "Major City",
+    type: "Capital City",
     isPort: false,
     x: 1262,
     y: 871,
