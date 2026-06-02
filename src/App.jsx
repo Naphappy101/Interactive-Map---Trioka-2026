@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { cities } from "./data/locations";
+import RouteLayer from "./components/RouteLayer";
+import { routes } from "./data/routes";
 
 /*
   Base map size.
@@ -40,6 +42,7 @@ function getCityMarkerStyle(city) {
     markerSize = "18px";
     markerZIndex = 12;
   }
+
   return {
     position: "absolute",
     left: leftPosition,
@@ -126,10 +129,51 @@ function MapKeyItem({ icon, label }) {
 }
 
 /*
+  Route key item.
+  Shows a small sample line for roads, trade roads, and sea routes.
+  Used by the static map key panel.
+*/
+function RouteKeyItem({ color, dashArray, label }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+      }}
+    >
+      <svg
+        width="32"
+        height="18"
+        viewBox="0 0 32 18"
+        style={{
+          flexShrink: 0,
+          overflow: "visible",
+        }}
+      >
+        <path
+          d="M 2 9 L 30 9"
+          fill="none"
+          stroke={color}
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray={dashArray}
+          style={{
+            filter: "drop-shadow(0 0 4px rgba(255, 255, 255, 0.35))",
+          }}
+        />
+      </svg>
+
+      <span>{label}</span>
+    </div>
+  );
+}
+
+/*
   Map key panel.
   Static currently.
   Explains what the map symbols mean.
-  Later this can hold roads, trade routes, sea routes, borders, etc.
+  Later this can hold borders, landmarks, and other map symbols.
 */
 function MapKey() {
   return (
@@ -185,6 +229,27 @@ function MapKey() {
           label="Major City"
         />
 
+        {/* Trade road symbol */}
+        <RouteKeyItem
+          color="#d97706"
+          dashArray="4 4"
+          label="Trade Road"
+        />
+
+        {/* Sea route symbol */}
+        <RouteKeyItem
+          color="#2563eb"
+          dashArray="10 8"
+          label="Sea Route"
+        />
+
+        {/* Standard road symbol */}
+        <RouteKeyItem
+          color="#9ca3af"
+          dashArray="none"
+          label="Road"
+        />
+
         <hr
           style={{
             width: "100%",
@@ -199,8 +264,8 @@ function MapKey() {
             margin: 0,
           }}
         >
-          Future key entries can include roads, trade routes, sea routes,
-          regional borders, and landmarks.
+          Roads, trade roads, and sea routes appear when a connected city is
+          selected.
         </p>
       </div>
     </aside>
@@ -304,6 +369,12 @@ export default function App() {
               userSelect: "none",
               pointerEvents: "none",
             }}
+          />
+
+          {/* Road, trade route, and sea route layer */}
+          <RouteLayer
+            routes={routes}
+            selectedCity={selectedCity}
           />
 
           {/* Coordinate display */}
