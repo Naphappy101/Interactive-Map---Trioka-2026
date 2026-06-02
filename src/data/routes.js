@@ -66,6 +66,86 @@ export const routes = [
       },
     ],
   },
+    {
+    id: "caelmarisport-to-aspengeld",
+    name: "Northeastern Trade Road",
+    type: "trade-road",
+
+    /*
+      These are the main route endpoints.
+      The route begins at Caelmarisport and ends at Aspengeld.
+    */
+    from: "caelmarisport",
+    to: "aspengeld",
+
+    description:
+      "The major northwest trade road of the Kingdom of Essia to the Elivsh Domain.",
+
+    /*
+      These points control the actual drawn path.
+      Add more points to bend the road more naturally across the map.
+    */
+    points: [
+      {
+        x: 492,
+        y: 225,
+      },
+      {
+        x: 493,
+        y: 93,
+      },
+    ],
+  },
+  {
+    id: "beacon-to-castleforge",
+    name: "Northeastern Trade Road",
+    type: "trade-road",
+
+    /*
+      These are the main route endpoints.
+      The route begins at Beacon and ends at Castleforge.
+    */
+    from: "beacon",
+    to: "castleforge",
+
+    /*
+      Any city id listed here will cause this route to appear
+      when that city is selected.
+      Add more city ids here as you place cities along this road.
+    */
+    connectedCities: [
+      "castleforge",
+      "ganymede",
+      "cape-saffar",
+      "beacon",
+    ],
+
+    description:
+      "The major northeast trade road of the Kingdom of Arpad to the Northern Dwarven Enclave.",
+
+    /*
+      These points control the actual drawn path.
+      Add more points to bend the road more naturally across the map.
+    */
+    points: [
+      {
+        x: 821,
+        y: 339,
+      },
+      {
+        x: 866,
+        y: 182,
+      },
+      {
+        x: 1033,
+        y: 177,
+      },
+      {
+        x: 1042,
+        y: 57,
+      },
+    ],
+  },
   {
     id: "vanderhold-to-stormcliff",
     name: "The Great Southern Way",
@@ -131,6 +211,65 @@ export const routes = [
       {
         x: 499,
         y: 507,
+      },
+    ],
+  },
+  {
+    id: "caelmarisport-to-dawnguard",
+    name: "Royal Essia Trade Road",
+    type: "trade-road",
+
+    /*
+      These are the main route endpoints.
+      The route begins at Caelmarisport and ends at Dawnguard.
+    */
+    from: "caelmarisport",
+    to: "dawnguard",
+
+    /*
+      Any city id listed here will cause this route to appear
+      when that city is selected.
+      Add more city ids here as you place cities along this road.
+    */
+    connectedCities: [
+      "caelmarisport",
+      "dawnguard",
+      "centerpoint",
+      "aurelions-reach",
+      "rosewood",
+    ],
+
+    description:
+      "The major north-south trade road of the human kingdoms in Ostirose.",
+
+    /*
+      These points control the actual drawn path.
+      Add more points to bend the road more naturally across the map.
+    */
+    points: [
+      {
+        x: 492,
+        y: 225,
+      },
+      {
+        x: 659,
+        y: 219,
+      },
+      {
+        x: 705,
+        y: 338,
+      },
+      {
+        x: 712,
+        y: 433,
+      },
+      {
+        x: 707,
+        y: 482,
+      },
+      {
+        x: 636,
+        y: 503,
       },
     ],
   },
