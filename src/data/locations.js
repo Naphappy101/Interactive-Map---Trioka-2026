@@ -298,7 +298,7 @@ export const cities = [
     isPort: false,
     x: 409,
     y: 649,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Mountpass.jpg",
     description:
       "This city is the northernmost major city on the western side of the Confederation of Free Cities.",
   },

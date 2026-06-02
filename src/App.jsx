@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cities } from "./data/locations";
 import RouteLayer from "./components/RouteLayer";
 import { routes } from "./data/routes";
@@ -28,10 +28,6 @@ function getCityMarkerStyle(city) {
   let markerSize = "16px";
   let markerZIndex = 10;
 
-  /*
-    Capital port cities use the same size as capital cities.
-    They get the highest z-index because they are the most important symbol.
-  */
   if (isCapitalPort) {
     markerSize = "20px";
     markerZIndex = 14;
@@ -47,25 +43,12 @@ function getCityMarkerStyle(city) {
     position: "absolute",
     left: leftPosition,
     top: topPosition,
-
     width: markerSize,
     height: markerSize,
-
-    /*
-      Center marker on its x/y coordinate.
-      Do not rotate here.
-      The SVG file itself should control the symbol shape.
-    */
     transform: "translate(-50%, -50%)",
-
-    /*
-      Remove default button styling.
-      Keeps only the icon image visible.
-    */
     padding: 0,
     border: "none",
     backgroundColor: "transparent",
-
     cursor: "pointer",
     zIndex: markerZIndex,
   };
@@ -73,8 +56,6 @@ function getCityMarkerStyle(city) {
 
 /*
   City icon selection.
-  Capital ports are checked first.
-  This lets capital port symbols override normal capital and port symbols.
 */
 function getCityIcon(city) {
   const isCapital = city.type === "Capital City";
@@ -97,8 +78,6 @@ function getCityIcon(city) {
 
 /*
   Map key item.
-  Keeps each icon row consistent.
-  Used by the static map key panel.
 */
 function MapKeyItem({ icon, label }) {
   return (
@@ -130,8 +109,6 @@ function MapKeyItem({ icon, label }) {
 
 /*
   Route key item.
-  Shows a small sample line for roads, trade roads, and sea routes.
-  Used by the static map key panel.
 */
 function RouteKeyItem({ color, dashArray, label }) {
   return (
@@ -171,9 +148,6 @@ function RouteKeyItem({ color, dashArray, label }) {
 
 /*
   Map key panel.
-  Static currently.
-  Explains what the map symbols mean.
-  Later this can hold borders, landmarks, and other map symbols.
 */
 function MapKey() {
   return (
@@ -205,50 +179,14 @@ function MapKey() {
           fontSize: "15px",
         }}
       >
-        {/* Capital port city symbol */}
-        <MapKeyItem
-          icon="/icons/capitalport.svg"
-          label="Capital Port City"
-        />
+        <MapKeyItem icon="/icons/capitalport.svg" label="Capital Port City" />
+        <MapKeyItem icon="/icons/capital.svg" label="Capital City" />
+        <MapKeyItem icon="/icons/port.svg" label="Port City" />
+        <MapKeyItem icon="/icons/majorcity.svg" label="Major City" />
 
-        {/* Capital city symbol */}
-        <MapKeyItem
-          icon="/icons/capital.svg"
-          label="Capital City"
-        />
-
-        {/* Port city symbol */}
-        <MapKeyItem
-          icon="/icons/port.svg"
-          label="Port City"
-        />
-
-        {/* Major city symbol */}
-        <MapKeyItem
-          icon="/icons/majorcity.svg"
-          label="Major City"
-        />
-
-        {/* Trade road symbol */}
-        <RouteKeyItem
-          color="#d97706"
-          dashArray="4 4"
-          label="Trade Road"
-        />
-
-        {/* Sea route symbol */}
-        <RouteKeyItem
-          color="#2563eb"
-          dashArray="10 8"
-          label="Sea Route"
-        />
-
-        {/* Standard road symbol */}
-        <RouteKeyItem
-          color="#9ca3af"
-          dashArray="none"
-          label="Road"
-        />
+        <RouteKeyItem color="#d97706" dashArray="4 4" label="Trade Road" />
+        <RouteKeyItem color="#2563eb" dashArray="10 8" label="Sea Route" />
+        <RouteKeyItem color="#9ca3af" dashArray="none" label="Road" />
 
         <hr
           style={{
@@ -274,30 +212,40 @@ function MapKey() {
 
 /*
   Main app.
-  Holds the map.
-  Holds the city panel.
-  Holds the map key.
 */
 export default function App() {
-  /*
-    Selected city.
-    Starts empty.
-    Fills when a city marker is clicked.
-  */
   const [selectedCity, setSelectedCity] = useState(null);
+  const [lastClick, setLastClick] = useState(null);
+  const [musicPlaying, setMusicPlaying] = useState(false);
+
+  const musicRef = useRef(null);
+  const cityClickSoundRef = useRef(null);
 
   /*
-    Last clicked map coordinate.
-    Used for finding x/y positions.
-    Can be helpful when placing new cities(for dev mostly).
+    Try to start the map music when the page loads.
+    Some browsers will block this until the user clicks.
   */
-  const [lastClick, setLastClick] = useState(null);
+  useEffect(() => {
+    if (!musicRef.current) return;
+
+    musicRef.current.volume = 0.1;
+    musicRef.current.loop = true;
+
+    musicRef.current
+      .play()
+      .then(() => {
+        setMusicPlaying(true);
+      })
+      .catch(() => {
+        console.log("Autoplay was blocked. User must click Play Map Music.");
+        setMusicPlaying(false);
+      });
+  }, []);
 
   /*
     Map click handler.
     Reads where the user clicked.
     Converts screen position into map x/y coordinates.
-    Logs the result for marker placement.
   */
   function handleMapClick(event) {
     const mapElement = event.currentTarget;
@@ -317,6 +265,44 @@ export default function App() {
     console.log(`x: ${mapX}, y: ${mapY}`);
   }
 
+  /*
+    Plays the city click sound whenever a city marker is clicked.
+  */
+  function playCityClickSound() {
+    if (!cityClickSoundRef.current) return;
+
+    cityClickSoundRef.current.currentTime = 0;
+    cityClickSoundRef.current.volume = 0.3;
+
+    cityClickSoundRef.current.play().catch(() => {
+      console.log("City click sound was blocked until user interaction.");
+    });
+  }
+
+  /*
+    Starts or pauses the background map music.
+  */
+  function toggleMusic() {
+    if (!musicRef.current) return;
+
+    if (musicPlaying) {
+      musicRef.current.pause();
+      setMusicPlaying(false);
+    } else {
+      musicRef.current.volume = 0.1;
+      musicRef.current.loop = true;
+
+      musicRef.current
+        .play()
+        .then(() => {
+          setMusicPlaying(true);
+        })
+        .catch(() => {
+          console.log("Music playback was blocked until user interaction.");
+        });
+    }
+  }
+
   return (
     <main
       style={{
@@ -330,6 +316,14 @@ export default function App() {
         overflow: "auto",
       }}
     >
+      {/* Audio files */}
+      <audio ref={musicRef} src="/audio/Menumusic.mp3" preload="auto" />
+      <audio
+        ref={cityClickSoundRef}
+        src="/audio/fireclickshort.mp3"
+        preload="auto"
+      />
+
       {/* Page wrapper */}
       <div
         style={{
@@ -372,10 +366,7 @@ export default function App() {
           />
 
           {/* Road, trade route, and sea route layer */}
-          <RouteLayer
-            routes={routes}
-            selectedCity={selectedCity}
-          />
+          <RouteLayer routes={routes} selectedCity={selectedCity} />
 
           {/* Coordinate display */}
           {lastClick && (
@@ -406,6 +397,7 @@ export default function App() {
                 style={getCityMarkerStyle(city)}
                 onClick={(event) => {
                   event.stopPropagation();
+                  playCityClickSound();
                   setSelectedCity(city);
                 }}
               >
@@ -420,10 +412,10 @@ export default function App() {
                     pointerEvents: "none",
                     userSelect: "none",
                     transition: "filter 160ms ease, transform 160ms ease",
-                    transform: isSelected ? "scale(1.25)" : "scale(1)",
+                    transform: isSelected ? "scale(1.35)" : "scale(1)",
                     filter: isSelected
-                      ? "drop-shadow(0 0 6px rgba(255, 238, 0, 0.95)) drop-shadow(0 0 12px rgba(255, 196, 0, 0.9))"
-                      : "drop-shadow(0 3px 4px rgba(0, 0, 0, 0.65))",
+                      ? "drop-shadow(0 0 4px rgba(255, 255, 180, 1)) drop-shadow(0 0 9px rgba(255, 196, 0, 1)) drop-shadow(0 0 16px rgba(255, 115, 0, 0.95)) drop-shadow(0 0 24px rgba(255, 60, 0, 0.75))"
+                      : "drop-shadow(0 3px 4px rgba(17, 59, 19, 0.60))",
                   }}
                 />
               </button>
@@ -454,6 +446,23 @@ export default function App() {
               boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
             }}
           >
+            {/* Music button */}
+            <button
+              onClick={toggleMusic}
+              style={{
+                backgroundColor: musicPlaying ? "#b48e10" : "#111827",
+                color: "white",
+                border: "1px solid #fcd34d",
+                borderRadius: "8px",
+                padding: "8px 12px",
+                cursor: "pointer",
+                marginBottom: "16px",
+                fontWeight: "bold",
+              }}
+            >
+              {musicPlaying ? "Pause Map Music" : "Start Map Music"}
+            </button>
+
             {selectedCity ? (
               <>
                 {/* City type */}
