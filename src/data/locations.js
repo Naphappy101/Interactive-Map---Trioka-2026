@@ -309,9 +309,9 @@ export const cities = [
     isPort: false,
     x: 681,
     y: 681,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Shadowstone.jpg",
     description:
-      "A city built in the shadows of the mountains, one of several important refuges on the trade route north.",
+      "Once a small quarry town, now a bustling center of trade and commerce on the northern trade route.",
   },
   {
     id: "newhaven",
@@ -562,9 +562,9 @@ export const cities = [
     isPort: false,
     x: 1352,
     y: 247,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Lakefall.jpg",
     description:
-      "Lakefall is the largest adventurer enclave built in the ruins of the Magisterium, named for the great city sinking into the lake before it.",
+      "Lakefall is the largest adventurer enclave built in the ruins of the Magisterium's city of Reconciliation. The town is named for the great city sinking into the lake before it.",
   },
     {
     id: "anchorpoint",
@@ -573,9 +573,9 @@ export const cities = [
     isPort: true,
     x: 1510,
     y: 349,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/AnchorPoint.jpg",
     description:
-      "Northernmost free harbor on Uldin, considered part of the wildlands, this harbor is a bustling trade and smuggling hub free of any governal oversight.",
+      "Standing at the ragged edge of the world, once a holding of the Sundrin Empire, this port is now a haven for pirates, smugglers, and outlaws of all kind. It now survives as a lawless harbor between jungle, ruin, and the sea.",
   },
    {
     id: "lastrefuge",
@@ -584,8 +584,8 @@ export const cities = [
     isPort: false,
     x: 1312,
     y: 160,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/LastRefuge.jpg",
     description:
-      "Surrounded by perils on all sides this is the last bastion of safety in the northern wildlands.",
+      "Enduring behind timber, moat, and stone stands the northernmost settlement in the wildlands. When winter deepens and the dead gather, this hard frontier city becomes the final sanctuary between civilization and the ruin beyond.",
   },
 ];
