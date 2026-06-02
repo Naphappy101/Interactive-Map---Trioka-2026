@@ -353,9 +353,9 @@ export const cities = [
     isPort: true,
     x: 989,
     y: 404,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Portsmith.jpg",
     description:
-      "The largest trade harbor for the Kingdom of Lyth, always bustling and full of traffic from all throughout Trioka.",
+      "One of the oldest and most noble harbor cities in the Kingdom of Lyth.",
   },
    {
     id: "athran-point",
@@ -452,7 +452,7 @@ export const cities = [
     isPort: false,
     x: 866,
     y: 182,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Ganymede.jpg",
     description:
       "The second largest city in the Kingdom of Arpad and major trading hub. Sitting just off the coast of Lake Ganymede.",
   },
