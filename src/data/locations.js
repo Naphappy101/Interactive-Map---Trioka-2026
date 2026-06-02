@@ -518,7 +518,7 @@ export const cities = [
     isPort: true,
     x: 1330,
     y: 649,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Ogrilswake.jpg",
     description:
       "Major military port for the Sundrin Empire.",
   },
