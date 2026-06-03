@@ -1,111 +1,142 @@
 /*
-  Route layer.
-  Draws roads, trade routes, and sea routes over the map.
-  Only routes connected to the selected city are shown.
+  RouteLayer draws roads, trade roads, and sea routes.
+
+  It does not store routes inside each city.
+  It uses the master routes list from routes.js.
+
+  It only shows routes when:
+  1. A city is selected.
+  2. The route connects to that selected city.
+  3. That route type is currently checked on.
 */
 
 const MAP_WIDTH = 1578;
 const MAP_HEIGHT = 996;
 
 /*
-  Route color.
-  Trade roads are orange.
-  Sea routes are blue.
-  Normal roads are gray.
+  Turns map x/y points into SVG percentage points.
+
+  This keeps route lines lined up with the map even when the map scales.
+
+  This supports route points written as:
+  { x: 492, y: 225 }
+
+  It also still supports route points written as:
+  [492, 225]
 */
-function getRouteColor(route) {
-  if (route.type === "sea-route") {
-    return "#2563eb";
-  }
+function convertPointsToSvgPoints(points) {
+  return points
+    .map((point) => {
+      const pointX = Array.isArray(point) ? point[0] : point.x;
+      const pointY = Array.isArray(point) ? point[1] : point.y;
 
-  if (route.type === "trade-road") {
-    return "#d97706";
-  }
+      const percentX = (pointX / MAP_WIDTH) * 100;
+      const percentY = (pointY / MAP_HEIGHT) * 100;
 
-  return "#9ca3af";
-}
-
-/*
-  Route dash pattern.
-  Sea routes and trade roads use different dashed lines.
-  Normal roads use a solid line.
-*/
-function getRouteDashArray(route) {
-  if (route.type === "sea-route") {
-    return "10 8";
-  }
-
-  if (route.type === "trade-road") {
-    return "4 4";
-  }
-
-  return "none";
-}
-
-/*
-  Route path builder.
-  Converts route points into an SVG path.
-  This allows routes to bend through multiple map points.
-*/
-function buildRoutePath(points) {
-  if (!points || points.length === 0) {
-    return "";
-  }
-
-  const firstPoint = points[0];
-
-  const remainingPoints = points
-    .slice(1)
-    .map((point) => `L ${point.x} ${point.y}`)
+      return `${percentX},${percentY}`;
+    })
     .join(" ");
-
-  return `M ${firstPoint.x} ${firstPoint.y} ${remainingPoints}`;
 }
 
 /*
-  Route connection checker.
-  Lets a route appear for its endpoints and for any middle cities
-  listed in connectedCities.
+  Gives each route type its own visual style.
+  These are inline SVG styles, not CSS edits.
 */
-function isRouteConnectedToCity(route, cityId) {
-  if (!cityId) {
-    return false;
+function getRouteStyle(routeType) {
+  if (routeType === "road") {
+    return {
+      stroke: "#d1d5db",
+      strokeWidth: "3",
+      strokeDasharray: "none",
+    };
   }
 
-  /*
-    from and to are the route endpoints.
-    These still count as connected cities.
-  */
-  if (route.from === cityId || route.to === cityId) {
-    return true;
+  if (routeType === "trade-road") {
+    return {
+      stroke: "#f59e0b",
+      strokeWidth: "3",
+      strokeDasharray: "6 5",
+    };
   }
 
-  /*
-    connectedCities lets one long route appear for cities along the road,
-    even if those cities are not the start or end of the route.
-  */
-  if (Array.isArray(route.connectedCities)) {
-    return route.connectedCities.includes(cityId);
+  if (routeType === "sea-route") {
+    return {
+      stroke: "#3b82f6",
+      strokeWidth: "3",
+      strokeDasharray: "8 6",
+    };
   }
+
+  return {
+    stroke: "#ffffff",
+    strokeWidth: "4",
+    strokeDasharray: "none",
+  };
+}
+
+/*
+  Checks if a route connects to the selected city.
+
+  This works with a route that has:
+  from: "city-id"
+  to: "city-id"
+
+  It also supports:
+  connectedCities: ["city-id", "city-id"]
+*/
+function routeConnectsToSelectedCity(route, selectedCity) {
+  if (!selectedCity) return false;
+
+  if (route.from === selectedCity.id) return true;
+  if (route.to === selectedCity.id) return true;
+
+  if (route.connectedCities?.includes(selectedCity.id)) return true;
 
   return false;
 }
 
 /*
-  Route layer component.
-  Routes are hidden until a city is selected.
-  Then only routes connected to that city are shown.
+  Checks if the route type is currently turned on.
+
+  route.type should be one of:
+  "road"
+  "trade-road"
+  "sea-route"
+
+  routeFilters should use the same names:
+  {
+    "road": true,
+    "trade-road": true,
+    "sea-route": true
+  }
 */
-export default function RouteLayer({ routes = [], selectedCity = null }) {
-  const visibleRoutes = selectedCity
-    ? routes.filter((route) => {
-        return isRouteConnectedToCity(route, selectedCity.id);
-      })
-    : [];
+function routeTypeIsTurnedOn(route, routeFilters) {
+  if (!route.type) return false;
+  if (!routeFilters) return false;
+
+  return routeFilters[route.type] === true;
+}
+
+export default function RouteLayer({ routes, selectedCity, routeFilters }) {
+  if (!selectedCity) return null;
+
+  const visibleRoutes = routes.filter((route) => {
+    const connectsToSelectedCity = routeConnectsToSelectedCity(
+      route,
+      selectedCity
+    );
+
+    const selectedRouteTypeIsTurnedOn = routeTypeIsTurnedOn(
+      route,
+      routeFilters
+    );
+
+    return connectsToSelectedCity && selectedRouteTypeIsTurnedOn;
+  });
 
   return (
     <svg
-      viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
+      viewBox="0 0 100 100"
       preserveAspectRatio="none"
       style={{
         position: "absolute",
@@ -113,34 +144,25 @@ export default function RouteLayer({ routes = [], selectedCity = null }) {
         width: "100%",
         height: "100%",
         pointerEvents: "none",
-
-        /*
-          Routes sit above the map image.
-          City markers sit above routes.
-        */
-        zIndex: 5,
+        zIndex: 4,
       }}
     >
       {visibleRoutes.map((route) => {
-        const routePath = buildRoutePath(route.points);
-
-        if (!routePath) {
-          return null;
-        }
+        const routeStyle = getRouteStyle(route.type);
 
         return (
-          <path
+          <polyline
             key={route.id}
-            d={routePath}
+            points={convertPointsToSvgPoints(route.points)}
             fill="none"
-            stroke={getRouteColor(route)}
-            strokeWidth="4"
+            stroke={routeStyle.stroke}
+            strokeWidth={routeStyle.strokeWidth}
+            strokeDasharray={routeStyle.strokeDasharray}
             strokeLinecap="round"
             strokeLinejoin="round"
-            strokeDasharray={getRouteDashArray(route)}
-            opacity="0.9"
+            vectorEffect="non-scaling-stroke"
             style={{
-              filter: "drop-shadow(0 0 5px rgba(255, 255, 255, 0.45))",
+              filter: "drop-shadow(0 0 3px rgba(0, 0, 0, 0.85))",
             }}
           />
         );

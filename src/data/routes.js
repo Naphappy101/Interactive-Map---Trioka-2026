@@ -6,6 +6,8 @@
 */
 
 export const routes = [
+
+  /* THE FIRST SECTION IS FOR TRADE ROADS. */
   {
     id: "caelmarisport-to-anchorhorn",
     name: "Royal Lyth Trade Road",
@@ -425,6 +427,8 @@ export const routes = [
       },
     ],
   },
+
+  /* THE SECOND SECTION IS FOR SEA ROUTES. */
   {
     id: "caelmarisport-to-freehold",
     name: "Western Depths Coastal Route",
@@ -754,6 +758,163 @@ export const routes = [
       {
         x: 1418,
         y: 678,
+      },
+    ],
+  },
+  {
+    id: "caelmarisport-to-cape-saffar",
+    name: "Treaterous Northern Ice Flow Route",
+    type: "sea-route",
+
+    /*
+      These are the main route endpoints.
+      The route begins at Caelmarisport and ends at Cape Saffar.
+    */
+    from: "caelmarisport",
+    to: "cape-saffar",
+
+    /*
+      Any city id listed here will cause this route to appear
+      when that city is selected.
+      Add more city ids here as you place cities along this road.
+    */
+    connectedCities: [
+      "caelmarisport",
+      "cape-saffar",
+      "whitewake",
+    ],
+
+    description:
+      "The seasonal northern ice flow sea route.",
+
+    /*
+      These points control the actual drawn path.
+      Add more points to bend the road more naturally across the map.
+    */
+    points: [
+      {
+        x: 492,
+        y: 225,
+      },
+      {
+        x: 450,
+        y: 203,
+      },
+      {
+        x: 369,
+        y: 136,
+      },
+      {
+        x: 349,
+        y: 92,
+      },
+      {
+        x: 377,
+        y: 47,
+      },
+      {
+        x: 440,
+        y: 36,
+      },
+      {
+        x: 552,
+        y: 46,
+      },
+      {
+        x: 609,
+        y: 30,
+      },
+      {
+        x: 652,
+        y: 1,
+      },
+      {
+        x: 691,
+        y: 10,
+      },
+      {
+        x: 694,
+        y: 40,
+      },
+      {
+        x: 740,
+        y: 1,
+      },
+      {
+        x: 785,
+        y: 13,
+      },
+      {
+        x: 784,
+        y: 60,
+      },
+      {
+        x: 807,
+        y: 66,
+      },
+      {
+        x: 926,
+        y: 39,
+      },
+      {
+        x: 1009,
+        y: 20,
+      },
+      {
+        x: 1078,
+        y: 27,
+      },
+      {
+        x: 1102,
+        y: 62,
+      },
+      {
+        x: 1079,
+        y: 130,
+      },
+      {
+        x: 1032,
+        y: 177,
+      },
+    ],
+  },
+
+  /* THE THIRD SECTION IS FOR ROADS. */
+{
+    id: "vanderhold-to-oasimere",
+    name: "The desert road",
+    type: "road",
+
+    /*
+      These are the main route endpoints.
+      The route begins at Vanderhold and ends at Stormcliff.
+    */
+    from: "vanderhold",
+    to: "oasimere",
+
+    description:
+      "The major southern trade route between the Confederation of Free Cities and the Southern Dwarven Enclave.",
+
+    /*
+      These points control the actual drawn path.
+      Add more points to bend the road more naturally across the map.
+    */
+    points: [
+      {
+        x: 877,
+        y: 897,
+      },
+      {
+        x: 800,
+        y: 890,
+      },
+      {
+        x: 751,
+        y: 855,
+      },
+      {
+        x: 687,
+        y: 859,
       },
     ],
   },

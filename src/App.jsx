@@ -77,17 +77,53 @@ function getCityIcon(city) {
 }
 
 /*
-  Map key item.
+  City icon filter type.
+  Used by the checklist to show or hide city marker groups.
 */
-function MapKeyItem({ icon, label }) {
+function getCityIconFilterType(city) {
+  const isCapital = city.type === "Capital City";
+  const isPort = city.isPort === true;
+  const isCapitalPort = isCapital && isPort;
+
+  if (isCapitalPort) {
+    return "capital-port";
+  }
+
+  if (isCapital) {
+    return "capital";
+  }
+
+  if (isPort) {
+    return "port";
+  }
+
+  return "major-city";
+}
+
+/*
+  Map key item.
+  Also works as a city icon toggle.
+*/
+function MapKeyItem({ icon, label, checked, onChange }) {
   return (
-    <div
+    <label
       style={{
         display: "flex",
         alignItems: "center",
         gap: "12px",
+        cursor: "pointer",
       }}
     >
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+        style={{
+          cursor: "pointer",
+          accentColor: "#fcd34d",
+        }}
+      />
+
       <img
         src={icon}
         alt=""
@@ -103,22 +139,34 @@ function MapKeyItem({ icon, label }) {
       />
 
       <span>{label}</span>
-    </div>
+    </label>
   );
 }
 
 /*
   Route key item.
+  Also works as a route toggle.
 */
-function RouteKeyItem({ color, dashArray, label }) {
+function RouteKeyItem({ color, dashArray, label, checked, onChange }) {
   return (
-    <div
+    <label
       style={{
         display: "flex",
         alignItems: "center",
         gap: "12px",
+        cursor: "pointer",
       }}
     >
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+        style={{
+          cursor: "pointer",
+          accentColor: "#fcd34d",
+        }}
+      />
+
       <svg
         width="32"
         height="18"
@@ -142,14 +190,25 @@ function RouteKeyItem({ color, dashArray, label }) {
       </svg>
 
       <span>{label}</span>
-    </div>
+    </label>
   );
 }
 
 /*
   Map key panel.
+  The routeFilters and setRouteFilters values are passed in from App.
+  The cityIconFilters and setCityIconFilters values are also passed in from App.
+
+  The map key now acts as both:
+  1. A symbol explanation.
+  2. A checklist for showing and hiding map layers.
 */
-function MapKey() {
+function MapKey({
+  routeFilters,
+  setRouteFilters,
+  cityIconFilters,
+  setCityIconFilters,
+}) {
   return (
     <aside
       style={{
@@ -179,14 +238,92 @@ function MapKey() {
           fontSize: "15px",
         }}
       >
-        <MapKeyItem icon="/icons/capitalport.svg" label="Capital Port City" />
-        <MapKeyItem icon="/icons/capital.svg" label="Capital City" />
-        <MapKeyItem icon="/icons/port.svg" label="Port City" />
-        <MapKeyItem icon="/icons/majorcity.svg" label="Major City" />
+        <MapKeyItem
+          icon="/icons/capitalport.svg"
+          label="Capital Port City"
+          checked={cityIconFilters["capital-port"]}
+          onChange={() =>
+            setCityIconFilters((previousFilters) => ({
+              ...previousFilters,
+              "capital-port": !previousFilters["capital-port"],
+            }))
+          }
+        />
 
-        <RouteKeyItem color="#d97706" dashArray="4 4" label="Trade Road" />
-        <RouteKeyItem color="#2563eb" dashArray="10 8" label="Sea Route" />
-        <RouteKeyItem color="#9ca3af" dashArray="none" label="Road" />
+        <MapKeyItem
+          icon="/icons/capital.svg"
+          label="Capital City"
+          checked={cityIconFilters["capital"]}
+          onChange={() =>
+            setCityIconFilters((previousFilters) => ({
+              ...previousFilters,
+              "capital": !previousFilters["capital"],
+            }))
+          }
+        />
+
+        <MapKeyItem
+          icon="/icons/port.svg"
+          label="Port City"
+          checked={cityIconFilters["port"]}
+          onChange={() =>
+            setCityIconFilters((previousFilters) => ({
+              ...previousFilters,
+              "port": !previousFilters["port"],
+            }))
+          }
+        />
+
+        <MapKeyItem
+          icon="/icons/majorcity.svg"
+          label="Major City"
+          checked={cityIconFilters["major-city"]}
+          onChange={() =>
+            setCityIconFilters((previousFilters) => ({
+              ...previousFilters,
+              "major-city": !previousFilters["major-city"],
+            }))
+          }
+        />
+
+        <RouteKeyItem
+          color="#d97706"
+          dashArray="4 4"
+          label="Trade Road"
+          checked={routeFilters["trade-road"]}
+          onChange={() =>
+            setRouteFilters((previousFilters) => ({
+              ...previousFilters,
+              "trade-road": !previousFilters["trade-road"],
+            }))
+          }
+        />
+
+        <RouteKeyItem
+          color="#2563eb"
+          dashArray="10 8"
+          label="Sea Route"
+          checked={routeFilters["sea-route"]}
+          onChange={() =>
+            setRouteFilters((previousFilters) => ({
+              ...previousFilters,
+              "sea-route": !previousFilters["sea-route"],
+            }))
+          }
+        />
+
+        <RouteKeyItem
+          color="#9ca3af"
+          dashArray="none"
+          label="Road"
+          checked={routeFilters["road"]}
+          onChange={() =>
+            setRouteFilters((previousFilters) => ({
+              ...previousFilters,
+              "road": !previousFilters["road"],
+            }))
+          }
+        />
 
         <hr
           style={{
@@ -202,8 +339,8 @@ function MapKey() {
             margin: 0,
           }}
         >
-          Roads, trade roads, and sea routes appear when a connected city is
-          selected.
+          Check or uncheck map key items to show or hide city icons and selected
+          city routes.
         </p>
       </div>
     </aside>
@@ -217,6 +354,19 @@ export default function App() {
   const [selectedCity, setSelectedCity] = useState(null);
   const [lastClick, setLastClick] = useState(null);
   const [musicPlaying, setMusicPlaying] = useState(false);
+
+  const [routeFilters, setRouteFilters] = useState({
+    "road": true,
+    "trade-road": true,
+    "sea-route": true,
+  });
+
+  const [cityIconFilters, setCityIconFilters] = useState({
+    "capital-port": true,
+    "capital": true,
+    "port": true,
+    "major-city": true,
+  });
 
   const musicRef = useRef(null);
   const cityClickSoundRef = useRef(null);
@@ -246,6 +396,10 @@ export default function App() {
     Map click handler.
     Reads where the user clicked.
     Converts screen position into map x/y coordinates.
+
+    This also clears the selected city.
+    City marker clicks use event.stopPropagation(), so clicking a city will not
+    trigger this empty-map click behavior.
   */
   function handleMapClick(event) {
     const mapElement = event.currentTarget;
@@ -261,6 +415,8 @@ export default function App() {
       x: mapX,
       y: mapY,
     });
+
+    setSelectedCity(null);
 
     console.log(`x: ${mapX}, y: ${mapY}`);
   }
@@ -366,7 +522,11 @@ export default function App() {
           />
 
           {/* Road, trade route, and sea route layer */}
-          <RouteLayer routes={routes} selectedCity={selectedCity} />
+          <RouteLayer
+            routes={routes}
+            selectedCity={selectedCity}
+            routeFilters={routeFilters}
+          />
 
           {/* Coordinate display */}
           {lastClick && (
@@ -387,40 +547,46 @@ export default function App() {
           )}
 
           {/* City markers */}
-          {cities.map((city) => {
-            const isSelected = selectedCity?.id === city.id;
+          {cities
+            .filter((city) => {
+              const cityIconFilterType = getCityIconFilterType(city);
 
-            return (
-              <button
-                key={city.id}
-                title={city.name}
-                style={getCityMarkerStyle(city)}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  playCityClickSound();
-                  setSelectedCity(city);
-                }}
-              >
-                <img
-                  src={getCityIcon(city)}
-                  alt=""
-                  draggable="false"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                    pointerEvents: "none",
-                    userSelect: "none",
-                    transition: "filter 160ms ease, transform 160ms ease",
-                    transform: isSelected ? "scale(1.35)" : "scale(1)",
-                    filter: isSelected
-                      ? "drop-shadow(0 0 4px rgba(255, 255, 180, 1)) drop-shadow(0 0 9px rgba(255, 196, 0, 1)) drop-shadow(0 0 16px rgba(255, 115, 0, 0.95)) drop-shadow(0 0 24px rgba(255, 60, 0, 0.75))"
-                      : "drop-shadow(0 3px 4px rgba(17, 59, 19, 0.60))",
+              return cityIconFilters[cityIconFilterType] === true;
+            })
+            .map((city) => {
+              const isSelected = selectedCity?.id === city.id;
+
+              return (
+                <button
+                  key={city.id}
+                  title={city.name}
+                  style={getCityMarkerStyle(city)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    playCityClickSound();
+                    setSelectedCity(city);
                   }}
-                />
-              </button>
-            );
-          })}
+                >
+                  <img
+                    src={getCityIcon(city)}
+                    alt=""
+                    draggable="false"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      pointerEvents: "none",
+                      userSelect: "none",
+                      transition: "filter 160ms ease, transform 160ms ease",
+                      transform: isSelected ? "scale(1.35)" : "scale(1)",
+                      filter: isSelected
+                        ? "drop-shadow(0 0 4px rgba(255, 255, 180, 1)) drop-shadow(0 0 9px rgba(255, 196, 0, 1)) drop-shadow(0 0 16px rgba(255, 115, 0, 0.95)) drop-shadow(0 0 24px rgba(255, 60, 0, 0.75))"
+                        : "drop-shadow(0 3px 4px rgba(17, 59, 19, 0.60))",
+                    }}
+                  />
+                </button>
+              );
+            })}
         </div>
 
         {/* Bottom panels */}
@@ -549,7 +715,12 @@ export default function App() {
           </aside>
 
           {/* Static map key */}
-          <MapKey />
+          <MapKey
+            routeFilters={routeFilters}
+            setRouteFilters={setRouteFilters}
+            cityIconFilters={cityIconFilters}
+            setCityIconFilters={setCityIconFilters}
+          />
         </div>
       </div>
     </main>
