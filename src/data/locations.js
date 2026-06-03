@@ -364,7 +364,7 @@ export const cities = [
     isPort: false,
     x: 466,
     y: 339,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/AthranPoint.jpg",
     description:
       "A Major fortress city protecting a vitally populated and resource heavy peninsula in the Kingdom of Essia.",
   },
@@ -408,7 +408,7 @@ export const cities = [
     isPort: false,
     x: 629,
     y: 339,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Foreharrow.jpg",
     description:
       "Often called the metropolis at the forest gate, one of the largest cities in Essia and sitting in the eves of the great forest which covers much of Essia.",
   },
@@ -419,7 +419,7 @@ export const cities = [
     isPort: false,
     x: 705,
     y: 338,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Centerpoint.jpg",
     description:
       "Named for its uniquely central position in the continent.",
   },
