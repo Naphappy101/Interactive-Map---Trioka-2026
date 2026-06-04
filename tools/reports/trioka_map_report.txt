@@ -6,33 +6,28 @@ Portrait folder: D:\Coding Projects\Interactive Map - Trioka 2026\public\portrai
 ============================================================
 SUMMARY
 ============================================================
-Total cities: 54
+Total cities: 59
 Capital cities: 10
-Major cities: 44
-Port cities: 22
+Major cities: 49
+Port cities: 23
 Capital port cities: 2
 
 ============================================================
 CITIES STILL USING UNDER CONSTRUCTION
 ============================================================
-- Rosewood (rosewood)
 - Crownhill (crownhill)
 - Rivercross (rivercross)
-- Shadowstone (shadowstone)
 - Newhaven (newhaven)
 - Pleasant Valley (pleasant-valley)
 - Desert's Edge (deserts-edge)
-- Athran Point (athran-point)
-- Foreharrow (foreharrow)
-- Centerpoint (centerpoint)
 - Bayview Landing (bayview-landing)
 - Frosthall (frosthall)
 - Throgarthrum (throgarthrum)
-- Ogrilswake (ogrilswake)
 - Krakensmaw (krakensmaw)
-- Lakefall (lakefall)
-- Anchor Point (anchorpoint)
-- Last Refuge (lastrefuge)
+- Bayview Castle (bayviewcastle)
+- Constantine (constantine)
+- Southport (southport)
+- Zugmurah (zugmurah)
 
 ============================================================
 MISSING PORTRAIT FILES
@@ -42,9 +37,10 @@ None found.
 ============================================================
 POSSIBLE MISSING isPort: true TAGS
 ============================================================
-- Shadowstone (shadowstone)
 - Foreharrow (foreharrow)
 - Ganymede (ganymede)
+- Bayview Castle (bayviewcastle)
+- Zugmurah (zugmurah)
 
 ============================================================
 DUPLICATE CITY IDS
@@ -83,21 +79,21 @@ ALL CITIES
 - Outreach | Major City | Not Port | id=outreach | x=1258, y=312 | /portraits/OutreachTheWildlands.jpg
 - Dawnguard | Major City | Not Port | id=dawnguard | x=636, y=503 | /portraits/Dawnguard.jpg
 - Riverscrown | Capital City | Not Port | id=riverscrown | x=916, y=538 | /portraits/RiverscrownLyth'sCapital.jpg
-- Rosewood | Major City | Not Port | id=rosewood | x=712, y=433 | /portraits/UnderConstruction.jpg
+- Rosewood | Major City | Not Port | id=rosewood | x=712, y=433 | /portraits/Rosewood.jpg
 - Crownhill | Major City | Not Port | id=crownhill | x=797, y=483 | /portraits/UnderConstruction.jpg
 - Rivercross | Major City | Not Port | id=rivercross | x=372, y=677 | /portraits/UnderConstruction.jpg
 - Mountpass | Major City | Not Port | id=mountpass | x=409, y=649 | /portraits/Mountpass.jpg
-- Shadowstone | Major City | Not Port | id=shadowstone | x=681, y=681 | /portraits/UnderConstruction.jpg
+- Shadowstone | Major City | Not Port | id=shadowstone | x=681, y=681 | /portraits/Shadowstone.jpg
 - Newhaven | Major City | Not Port | id=newhaven | x=403, y=756 | /portraits/UnderConstruction.jpg
 - Pleasant Valley | Major City | Not Port | id=pleasant-valley | x=333, y=772 | /portraits/UnderConstruction.jpg
 - Desert's Edge | Major City | Not Port | id=deserts-edge | x=359, y=813 | /portraits/UnderConstruction.jpg
 - Portsmith | Major City | Port | id=portsmith | x=989, y=404 | /portraits/Portsmith.jpg
-- Athran Point | Major City | Not Port | id=athran-point | x=466, y=339 | /portraits/UnderConstruction.jpg
+- Athran Point | Major City | Not Port | id=athran-point | x=466, y=339 | /portraits/AthranPoint.jpg
 - Whitewake | Major City | Port | id=whitewake | x=694, y=40 | /portraits/Whitewake.jpg
 - Cape Saffar | Major City | Port | id=cape-saffar | x=1032, y=177 | /portraits/CapeSaffar.jpg
 - North Castleport | Major City | Port | id=north-castleport | x=969, y=295 | /portraits/NorthCastleport.jpg
-- Foreharrow | Major City | Not Port | id=foreharrow | x=629, y=339 | /portraits/UnderConstruction.jpg
-- Centerpoint | Major City | Not Port | id=centerpoint | x=705, y=338 | /portraits/UnderConstruction.jpg
+- Foreharrow | Major City | Not Port | id=foreharrow | x=629, y=339 | /portraits/Foreharrow.jpg
+- Centerpoint | Major City | Not Port | id=centerpoint | x=705, y=338 | /portraits/Centerpoint.jpg
 - Bayview Landing | Major City | Port | id=bayview-landing | x=846, y=639 | /portraits/UnderConstruction.jpg
 - Frosthall | Major City | Not Port | id=frosthall | x=826, y=89 | /portraits/UnderConstruction.jpg
 - Ganymede | Major City | Not Port | id=ganymede | x=866, y=182 | /portraits/Ganymede.jpg
@@ -106,10 +102,15 @@ ALL CITIES
 - Desert's Mouth | Major City | Port | id=desert'smouth | x=1176, y=734 | /portraits/Desert'sMouth.jpg
 - Booty Bay | Major City | Port | id=bootybay | x=1413, y=910 | /portraits/BootyBay.jpg
 - Throgarthrum | Major City | Not Port | id=throgarthrum | x=1401, y=586 | /portraits/UnderConstruction.jpg
-- Ogrilswake | Major City | Port | id=ogrilswake | x=1330, y=649 | /portraits/UnderConstruction.jpg
+- Ogrilswake | Major City | Port | id=ogrilswake | x=1330, y=649 | /portraits/Ogrilswake.jpg
 - Krakensmaw | Major City | Port | id=krakensmaw | x=1418, y=678 | /portraits/UnderConstruction.jpg
 - Slumber Hall | Major City | Not Port | id=slumberhall | x=1098, y=860 | /portraits/SlumberHall.jpg
 - Eternal Valley | Capital City | Not Port | id=eternalvalley | x=1262, y=871 | /portraits/EternalValley.jpg
-- Lakefall | Major City | Not Port | id=lakefall | x=1352, y=247 | /portraits/UnderConstruction.jpg
-- Anchor Point | Major City | Port | id=anchorpoint | x=1510, y=349 | /portraits/UnderConstruction.jpg
-- Last Refuge | Major City | Not Port | id=lastrefuge | x=1312, y=160 | /portraits/UnderConstruction.jpg
+- Lakefall | Major City | Not Port | id=lakefall | x=1352, y=247 | /portraits/Lakefall.jpg
+- Anchor Point | Major City | Port | id=anchorpoint | x=1510, y=349 | /portraits/AnchorPoint.jpg
+- Last Refuge | Major City | Not Port | id=lastrefuge | x=1312, y=160 | /portraits/LastRefuge.jpg
+- Urdred's Shadow | Major City | Not Port | id=urdred'sshadow | x=1184, y=237 | /portraits/Urdred'sShadow.jpg
+- Bayview Castle | Major City | Not Port | id=bayviewcastle | x=705, y=558 | /portraits/UnderConstruction.jpg
+- Constantine | Major City | Not Port | id=constantine | x=922, y=142 | /portraits/UnderConstruction.jpg
+- Southport | Major City | Port | id=southport | x=521, y=440 | /portraits/UnderConstruction.jpg
+- Zugmurah | Major City | Not Port | id=zugmurah | x=1325, y=519 | /portraits/UnderConstruction.jpg

@@ -106,7 +106,7 @@ export const routes = [
   },
     {
     id: "caelmarisport-to-aspengeld",
-    name: "Northeastern Trade Road",
+    name: "Northwestern Trade Road",
     type: "trade-road",
 
     /*
@@ -147,6 +147,184 @@ export const routes = [
     ],
   },
   {
+    id: "caelmarisport-to-stormcliff",
+    name: "Southwestern Trade Road",
+    type: "trade-road",
+
+    /*
+      These are the main route endpoints.
+      The route begins at Caelmarisport and ends at Stormcliff.
+    */
+    from: "caelmarisport",
+    to: "stormcliff",
+
+    /*
+      Any city id listed here will cause this route to appear
+      when that city is selected.
+      Add more city ids here as you place cities along this road.
+    */
+    connectedCities: [
+      "caelmarisport",
+      "athran-point",
+      "southport",
+      "stormcliff",
+    ],
+
+    description:
+      "The major southwestern trade road of the Kingdom of Essia to the Southern Dwarven Enclave.",
+
+    /*
+      These points control the actual drawn path.
+      Add more points to bend the road more naturally across the map.
+    */
+    points: [
+      {
+        x: 492,
+        y: 225,
+      },
+      {
+        x: 510,
+        y: 260,
+      },
+      {
+        x: 516,
+        y: 305,
+      },
+      {
+        x: 511,
+        y: 322,
+      },
+      {
+        x: 493,
+        y: 338,
+      },
+      {
+        x: 466,
+        y: 339,
+      },
+      {
+        x: 476,
+        y: 388,
+      },
+      {
+        x: 512,
+        y: 412,
+      },
+      {
+        x: 521,
+        y: 440,
+      },
+      {
+        x: 540,
+        y: 462,
+      },
+      {
+        x: 530,
+        y: 491,
+      },
+      {
+        x: 499,
+        y: 507,
+      },
+    ],
+  },
+  {
+    id: "westhaven-to-stormcliff",
+    name: "Southwestern Trade Road Southern Branch",
+    type: "trade-road",
+
+    /*
+      These are the main route endpoints.
+      The route begins at Westhaven and ends at Stormcliff.
+    */
+    from: "westhaven",
+    to: "stormcliff",
+
+    /*
+      Any city id listed here will cause this route to appear
+      when that city is selected.
+      Add more city ids here as you place cities along this road.
+    */
+    connectedCities: [
+      "westhaven",
+      "stormcliff",
+      "pleasant-valley",
+      "newhaven",
+      "rivercross",
+      "mountpass",
+    ],
+
+    description:
+      "The major south-north trade road of free cities and the southern dwarven enclave.",
+
+    /*
+      These points control the actual drawn path.
+      Add more points to bend the road more naturally across the map.
+    */
+    points: [
+      {
+        x: 231,
+        y: 696,
+      },
+      {
+        x: 275,
+        y: 692,
+      },
+      {
+        x: 315,
+        y: 713,
+      },
+      {
+        x: 337,
+        y: 741,
+      },
+      {
+        x: 333,
+        y: 772,
+      },
+      {
+        x: 364,
+        y: 753,
+      },
+      {
+        x: 403,
+        y: 756,
+      },
+      {
+        x: 396,
+        y: 713,
+      },
+      {
+        x: 381,
+        y: 698,
+      },
+      {
+        x: 372,
+        y: 677,
+      },
+      {
+        x: 409,
+        y: 649,
+      },
+      {
+        x: 460,
+        y: 625,
+      },
+      {
+        x: 448,
+        y: 608,
+      },
+      {
+        x: 482,
+        y: 559,
+      },
+      {
+        x: 499,
+        y: 507,
+      },
+    ],
+  },
+  {
     id: "beacon-to-castleforge",
     name: "Northeastern Trade Road",
     type: "trade-road",
@@ -168,6 +346,7 @@ export const routes = [
       "ganymede",
       "cape-saffar",
       "beacon",
+      "constantine",
     ],
 
     description:
@@ -211,8 +390,8 @@ export const routes = [
         y: 176,
       },
       {
-        x: 924,
-        y: 143,
+        x: 922,
+        y: 142,
       },
       {
         x: 970,
@@ -449,6 +628,7 @@ export const routes = [
     connectedCities: [
       "caelmarisport",
       "freehold",
+      "southport",
       "stormcliff",
       "westhaven",
     ],
@@ -480,6 +660,18 @@ export const routes = [
       {
         x: 485,
         y: 429,
+      },
+      {
+        x: 501,
+        y: 435,
+      },
+      {
+        x: 521,
+        y: 440,
+      },
+      {
+        x: 507,
+        y: 464,
       },
       {
         x: 499,
@@ -524,6 +716,56 @@ export const routes = [
       {
         x: 284,
         y: 911,
+      },
+    ],
+  },
+   {
+    id: "bayview-landing-to-desert'smouth",
+    name: "Narrow Sea Crossings",
+    type: "sea-route",
+
+    /*
+      These are the main route endpoints.
+      The route begins at bayview-landing and ends at desert'smouth.
+    */
+    from: "bayview-landing",
+    to: "desert'smouth",
+
+    /*
+      Any city id listed here will cause this route to appear
+      when that city is selected.
+      Add more city ids here as you place cities along this road.
+    */
+    connectedCities: [
+      "bayview-landing",
+      "dragonisle",
+      "anchorhorn",
+      "desert'smouth",
+    ],
+
+    description:
+      "The Narrow Sea span crossings.",
+
+    /*
+      These points control the actual drawn path.
+      Add more points to bend the road more naturally across the map.
+    */
+    points: [
+      {
+        x: 846,
+        y: 639,
+      },
+      {
+        x: 1015,
+        y: 818,
+      },
+      {
+        x: 1001,
+        y: 669,
+      },
+      {
+        x: 1176,
+        y: 734,
       },
     ],
   },
@@ -651,6 +893,220 @@ export const routes = [
     ],
   },
   {
+    id: "anchorhorn-to-cape-saffar",
+    name: "The Narrow Sea Route",
+    type: "sea-route",
+
+    /*
+      These are the main route endpoints.
+      The route begins at Anchorhorn and ends at Cape Saffar.
+    */
+    from: "anchorhorn",
+    to: "cape-saffar",
+
+    /*
+      Any city id listed here will cause this route to appear
+      when that city is selected.
+      Add more city ids here as you place cities along this road.
+    */
+    connectedCities: [
+      "anchorhorn",
+      "fang-cove",
+      "portsmith",
+      "north-castleport",
+      "cape-saffar",
+    ],
+
+    description:
+      "The north-south route of the narrow sea.",
+
+    /*
+      These points control the actual drawn path.
+      Add more points to bend the road more naturally across the map.
+    */
+    points: [
+      {
+        x: 1001,
+        y: 669,
+      },
+      {
+        x: 1031,
+        y: 667,
+      },
+      {
+        x: 1056,
+        y: 608,
+      },
+      {
+        x: 1063,
+        y: 575,
+      },
+      {
+        x: 1132,
+        y: 541,
+      },
+      {
+        x: 1094,
+        y: 527,
+      },
+      {
+        x: 1081,
+        y: 466,
+      },
+      {
+        x: 1054,
+        y: 441,
+      },
+      {
+        x: 989,
+        y: 404,
+      },
+      {
+        x: 1026,
+        y: 388,
+      },
+      {
+        x: 1020,
+        y: 373,
+      },
+      {
+        x: 1007,
+        y: 336,
+      },
+      {
+        x: 969,
+        y: 295,
+      },
+      {
+        x: 985,
+        y: 273,
+      },
+      {
+        x: 1004,
+        y: 235,
+      },
+      {
+        x: 1026,
+        y: 213,
+      },
+      {
+        x: 1032,
+        y: 177,
+      },
+    ],
+  },
+  {
+    id: "lastport-to-ogrilswake",
+    name: "The North Lyth Bay cross Narrow Sea Route",
+    type: "sea-route",
+
+    /*
+      These are the main route endpoints.
+      The route begins at Lastport and ends at Ogrilswake.
+    */
+    from: "lastport",
+    to: "ogrilswake",
+
+    /*
+      Any city id listed here will cause this route to appear
+      when that city is selected.
+      Add more city ids here as you place cities along this road.
+    */
+    connectedCities: [
+      "lastport",
+      "bayview-landing",
+      "anchorhorn",
+      "fang-cove",
+      "ogrilswake",
+    ],
+
+    description:
+      "The north-south route of the narrow sea.",
+
+    /*
+      These points control the actual drawn path.
+      Add more points to bend the road more naturally across the map.
+    */
+    points: [
+      {
+        x: 720,
+        y: 623,
+      },
+      {
+        x: 731,
+        y: 589,
+      },
+      {
+        x: 771,
+        y: 625,
+      },
+      {
+        x: 796,
+        y: 647,
+      },
+      {
+        x: 834,
+        y: 671,
+      },
+      {
+        x: 846,
+        y: 639,
+      },
+      {
+        x: 878,
+        y: 670,
+      },
+      {
+        x: 915,
+        y: 674,
+      },
+      {
+        x: 951,
+        y: 684,
+      },
+      {
+        x: 1001,
+        y: 669,
+      },
+      {
+        x: 1031,
+        y: 667,
+      },
+      {
+        x: 1056,
+        y: 608,
+      },
+      {
+        x: 1063,
+        y: 575,
+      },
+      {
+        x: 1132,
+        y: 541,
+      },
+      {
+        x: 1174,
+        y: 571,
+      },
+      {
+        x: 1182,
+        y: 598,
+      },
+      {
+        x: 1229,
+        y: 630,
+      },
+      {
+        x: 1276,
+        y: 637,
+      },
+      {
+        x: 1330,
+        y: 649,
+      },
+    ],
+  },
+  {
     id: "vanderhold-to-krakensmaw",
     name: "Southern Narrow Sea Route",
     type: "sea-route",
@@ -758,6 +1214,128 @@ export const routes = [
       {
         x: 1418,
         y: 678,
+      },
+    ],
+  },
+  {
+    id: "vanderhold-to-anchorhorn",
+    name: "Bayside Narrow Sea Route",
+    type: "sea-route",
+
+    /*
+      These are the main route endpoints.
+      The route begins at Vanderhold and ends at Anchorhorn.
+    */
+    from: "vanderhold",
+    to: "anchorhorn",
+
+    /*
+      Any city id listed here will cause this route to appear
+      when that city is selected.
+      Add more city ids here as you place cities along this road.
+    */
+    connectedCities: [
+      "lastport",
+      "vanderhold",
+      "bayview-landing",
+      "anchorhorn",
+    ],
+
+    description:
+      "The bayside route of the narrow sea.",
+
+    /*
+      These points control the actual drawn path.
+      Add more points to bend the road more naturally across the map.
+    */
+    points: [
+      {
+        x: 877,
+        y: 897,
+      },
+      {
+        x: 904,
+        y: 915,
+      },
+      {
+        x: 930,
+        y: 897,
+      },
+      {
+        x: 921,
+        y: 841,
+      },
+      {
+        x: 905,
+        y: 810,
+      },
+      {
+        x: 881,
+        y: 778,
+      },
+      {
+        x: 862,
+        y: 758,
+      },
+      {
+        x: 818,
+        y: 738,
+      },
+      {
+        x: 808,
+        y: 713,
+      },
+      {
+        x: 802,
+        y: 692,
+      },
+      {
+        x: 771,
+        y: 661,
+      },
+      {
+        x: 743,
+        y: 628,
+      },
+      {
+        x: 720,
+        y: 623,
+      },
+      {
+        x: 731,
+        y: 589,
+      },
+      {
+        x: 771,
+        y: 625,
+      },
+      {
+        x: 796,
+        y: 647,
+      },
+      {
+        x: 834,
+        y: 671,
+      },
+      {
+        x: 846,
+        y: 639,
+      },
+      {
+        x: 878,
+        y: 670,
+      },
+      {
+        x: 915,
+        y: 674,
+      },
+      {
+        x: 951,
+        y: 684,
+      },
+      {
+        x: 1001,
+        y: 669,
       },
     ],
   },

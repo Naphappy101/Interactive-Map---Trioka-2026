@@ -265,7 +265,7 @@ export const cities = [
     isPort: false,
     x: 712,
     y: 433,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Rosewood.jpg",
     description:
       "An ancient battleground between Lyth and Essia, the town growing here is a testament to human perseverance.",
   },
@@ -276,7 +276,7 @@ export const cities = [
     isPort: false,
     x: 797,
     y: 483,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Crownhill.jpg",
     description:
       "In the contested hills of the Kingdom of Essia, once part of the Kingdom of Lyth, this city is said to sit like a crown above the rolling hills.",
   },
@@ -336,7 +336,7 @@ export const cities = [
       "One of the most lush and garden-filled cities in all of Ostirose.",
   },
   {
-    id: "deserts-edge",
+    id: "desert's-edge",
     name: "Desert's Edge",
     type: "Major City",
     isPort: false,
@@ -432,7 +432,7 @@ export const cities = [
     y: 639,
     portraits: "/portraits/UnderConstruction.jpg",
     description:
-      "The major port closest to the Lyth bay.",
+      "Once a part of the now defunct Kingdom of the Bay, this city is a major port closest to the Lyth bay in the Kingdom of Lyth.",
   },
     {
     id: "frosthall",
@@ -441,7 +441,7 @@ export const cities = [
     isPort: false,
     x: 826,
     y: 89,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Frosthall.jpg",
     description:
       "The northern most major city in the Kingdom of Arpad.",
   },
@@ -587,5 +587,60 @@ export const cities = [
     portraits: "/portraits/LastRefuge.jpg",
     description:
       "Enduring behind timber, moat, and stone stands the northernmost settlement in the wildlands. When winter deepens and the dead gather, this hard frontier city becomes the final sanctuary between civilization and the ruin beyond.",
+  },
+  {
+    id: "urdred'sshadow",
+    name: "Urdred's Shadow",
+    type: "Major City",
+    isPort: false,
+    x: 1184,
+    y: 237,
+    portraits: "/portraits/Urdred'sShadow.jpg",
+    description:
+      "Under the shadow of an ancient fortress from the height of the Magisterium, in the harsh winters and deadly wildlands, a city of adventurers has arisen.",
+  },
+  {
+    id: "bayviewcastle",
+    name: "Bayview Castle",
+    type: "Major City",
+    isPort: false,
+    x: 705,
+    y: 558,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "Once part of the now defunct Kingdom of the Bay, this castle city holds the westernmost territory of the Kingdom of Lyth.",
+  },
+  {
+    id: "constantine",
+    name: "Constantine",
+    type: "Major City",
+    isPort: false,
+    x: 922,
+    y: 142,
+    portraits: "/portraits/Constantine.jpg",
+    description:
+      "A thriving storehouse city between the mountains of the Dwarven Enclave and the Great Lake Ganymede.",
+  },
+  {
+    id: "southport",
+    name: "Southport",
+    type: "Major City",
+    isPort: true,
+    x: 521,
+    y: 440,
+    portraits: "/portraits/Southport.jpg",
+    description:
+      "One of the smaller major cities in Essia, full of explorers, cartographers, and adventurers. Being so far from the capital has made this place resonate with an air of more freedom.",
+  },
+  {
+    id: "zugmurah",
+    name: "Zugmurah",
+    type: "Major City",
+    isPort: false,
+    x: 1325,
+    y: 519,
+    portraits: "/portraits/UnderConstruction.jpg",
+    description:
+      "The central market city of the Sundrin Empire, deep in the jungles, safe from the coasts, this city is the center of all of the Sundrin Empire's internal trade networks.",
   },
 ];
