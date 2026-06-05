@@ -28,7 +28,7 @@ export const cities = [
     x: 1001,
     y: 669,
     portraits: "/portraits/AnchorhornLythSouthernPort.jpg",
-    description: "One of the largest and southernmost ports of the Kingdom of Lyth.",
+    description: "A southern port in the Kingdom of Lyth, on the beaches of Anchorhorn many a ship at sea was once built. Anchorhorn would be considered a central ship building hub of the world.",
   },
   {
     id: "caelmarisport",
@@ -210,9 +210,9 @@ export const cities = [
     isPort: false,
     x: 659,
     y: 219,
-    portraits: "/portraits/Aurelion'sReach.png",
+    portraits: "/portraits/Aurelion'sReach.jpg",
     description:
-      "The second largest city in Essia; this image is all that remains of the once-great city.",
+      "Once the second largest and possibly greatest city in Essia, now a scarred shadow of its former glory, colloquially known by its local inhabitants as Aurelion's Scar.",
   },
   {
     id: "preservation",
@@ -287,9 +287,9 @@ export const cities = [
     isPort: false,
     x: 372,
     y: 677,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Rivercross.jpg",
     description:
-      "A major river crossing and trade depot on the Westfork River.",
+      "A major river crossing and river tradehub on the Westfork River.",
   },
   {
     id: "mountpass",
@@ -320,9 +320,9 @@ export const cities = [
     isPort: false,
     x: 403,
     y: 756,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Newhaven.jpg",
     description:
-      "This city is a vital population hub, housing much of the labor that works the many farms and orchards in the surrounding lush valleys.",
+      "The largest population center and a vital population hub, housing much of the labor that works the many farms and orchards in the surrounding lush valleys.",
   },
   {
     id: "pleasant-valley",
@@ -331,7 +331,7 @@ export const cities = [
     isPort: false,
     x: 333,
     y: 772,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/PleasantValley.jpg",
     description:
       "One of the most lush and garden-filled cities in all of Ostirose.",
   },
@@ -342,7 +342,7 @@ export const cities = [
     isPort: false,
     x: 359,
     y: 813,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Desert'sEdge.jpg",
     description:
       "A city in the Confederation of Free Cities grown out like a practical wall against the harsh southern desert.",
   },
@@ -430,7 +430,7 @@ export const cities = [
     isPort: true,
     x: 846,
     y: 639,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Bayview-Landing.jpg",
     description:
       "Once a part of the now defunct Kingdom of the Bay, this city is a major port closest to the Lyth bay in the Kingdom of Lyth.",
   },
@@ -507,9 +507,9 @@ export const cities = [
     isPort: false,
     x: 1401,
     y: 586,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Throgarthrum.jpg",
     description:
-      "Largest trading hub in the southern reaches of the Sundrin Empire.",
+      "The Sundrin Empire's major production hub for its most valuable trade resources. Here large stockpiles of medicines, venoms, and other jungle cocktails are produced, as well as being a major hub for the harvesting of bloodwood bark.",
   },
    {
     id: "ogrilswake",
@@ -529,9 +529,9 @@ export const cities = [
     isPort: true,
     x: 1418,
     y: 678,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Krakensmaw.jpg",
     description:
-      "Southernmost Major Harbor city in the Sundrin Empire, said to be shaped like a kraken's maw.",
+      "Southernmost Major Harbor city in the Sundrin Empire, said to be shaped like a kraken's maw and a home for the less than reputable, a type the Sundrin Empire has always been wecome to trade. Even use, when the opportunity arises.",
   },
    {
     id: "slumberhall",
@@ -606,7 +606,7 @@ export const cities = [
     isPort: false,
     x: 705,
     y: 558,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Bayview-Castle.jpg",
     description:
       "Once part of the now defunct Kingdom of the Bay, this castle city holds the westernmost territory of the Kingdom of Lyth.",
   },
@@ -639,7 +639,7 @@ export const cities = [
     isPort: false,
     x: 1325,
     y: 519,
-    portraits: "/portraits/UnderConstruction.jpg",
+    portraits: "/portraits/Zugmurah.jpg",
     description:
       "The central market city of the Sundrin Empire, deep in the jungles, safe from the coasts, this city is the center of all of the Sundrin Empire's internal trade networks.",
   },
