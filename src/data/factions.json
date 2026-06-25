@@ -1,0 +1,74 @@
+[
+  {
+    "id": "kingdom-of-lyth",
+    "name": "Kingdom of Lyth",
+    "color": "#2563eb",
+    "defaultVisible": false
+  },
+  {
+    "id": "kingdom-of-essia",
+    "name": "Kingdom of Essia",
+    "color": "#dc2626",
+    "defaultVisible": false
+  },
+  {
+    "id": "kingdom-of-arpad",
+    "name": "Kingdom of Arpad",
+    "color": "#facc15",
+    "defaultVisible": false
+  },
+  {
+    "id": "confederation-of-free-cities",
+    "name": "Confederation of Free Cities",
+    "color": "#9333ea",
+    "defaultVisible": false
+  },
+  {
+    "id": "sundrin-empire",
+    "name": "Sundrin Empire",
+    "color": "#16a34a",
+    "defaultVisible": false
+  },
+  {
+    "id": "northern-dwarven-enclave",
+    "name": "Northern Dwarven Enclave",
+    "color": "#64748b",
+    "defaultVisible": false
+  },
+  {
+    "id": "southern-dwarven-enclave",
+    "name": "Southern Dwarven Enclave",
+    "color": "#78716c",
+    "defaultVisible": false
+  },
+  {
+    "id": "elvish-domain",
+    "name": "Elvish Domain",
+    "color": "#84cc16",
+    "defaultVisible": false
+  },
+  {
+    "id": "kingdom-of-the-wastes",
+    "name": "Kingdom of the Wastes",
+    "color": "#d97706",
+    "defaultVisible": false
+  },
+  {
+    "id": "draconic-territories",
+    "name": "Draconic Territories",
+    "color": "#7c3aed",
+    "defaultVisible": false
+  },
+  {
+    "id": "the-magisterium",
+    "name": "The Magisterium",
+    "color": "#06b6d4",
+    "defaultVisible": false
+  },
+  {
+    "id": "wildlands",
+    "name": "Wildlands",
+    "color": "#94a3b8",
+    "defaultVisible": false
+  }
+]

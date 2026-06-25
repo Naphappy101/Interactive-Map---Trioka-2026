@@ -1,43 +1,150 @@
 import { useEffect, useRef, useState } from "react";
-import { cities } from "./data/locations";
 import RouteLayer from "./components/RouteLayer";
-import { routes } from "./data/routes";
+import Login from "./components/Login";
+
+import cities from "./data/cities.json";
+import routes from "./data/routes.json";
+import factions from "./data/factions.json";
+import regions from "./data/regions.json";
+import atlasConfig from "./data/AtlasConfig.json";
 
 /*
-  Base map size.
-  Numbers match the actual image size.
-  Used to convert city x/y coordinates into percentages.
+  Trioka Atlas
+
+  JSON controls:
+  - Map image
+  - Map size
+  - Audio
+  - Icons
+  - City data
+  - Route data
+  - Faction data
+  - Region data
 */
-const MAP_WIDTH = 1578;
-const MAP_HEIGHT = 996;
+
+const MAP_WIDTH = atlasConfig.map.width;
+const MAP_HEIGHT = atlasConfig.map.height;
 
 /*
-  City marker styling.
-  Controls marker position, size, and click area.
-  Icon image controls the actual symbol appearance.
-  Selected cities get a larger glow from the image filter.
+  Loads the saved login user from localStorage.
+  Local key used inside Login.jsx.
 */
-function getCityMarkerStyle(city) {
+function getSavedUser() {
+  try {
+    const savedUser = localStorage.getItem("triokaUser");
+    return savedUser ? JSON.parse(savedUser) : null;
+  } catch {
+    return null;
+  }
+}
+
+/*
+  Default checked/unchecked state for filters.
+
+  Example:
+  [
+    { id: "road", defaultVisible: true },
+    { id: "sea-route", defaultVisible: true }
+  ]
+
+  Becomes:
+  {
+    "road": true,
+    "sea-route": true
+  }
+*/
+function buildDefaultFilters(items, fallbackDefault = true) {
+  if (!Array.isArray(items)) {
+    return {};
+  }
+
+  return items.reduce((filters, item) => {
+    filters[item.id] = item.defaultVisible ?? fallbackDefault;
+    return filters;
+  }, {});
+}
+
+/*
+  Safely turns a single value or array into an array.
+
+  Example:
+  "sundrin-empire" becomes ["sundrin-empire"]
+
+  Example:
+  ["sundrin-empire", "kingdom-of-lyth"] stays the same
+*/
+function valueToArray(value) {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
+}
+
+/*
+  Removes repeated values from an array.
+*/
+function uniqueArray(values) {
+  return [...new Set(values.filter(Boolean))];
+}
+
+/*
+  City icon filter type.
+
+  New method:
+  - Prefer city.markerType from cities.json.
+
+  Fallback method:
+  - If markerType is missing, use old logic from type/isPort.
+*/
+function getCityIconFilterType(city) {
+  if (city.markerType) {
+    return city.markerType;
+  }
+
   const isCapital = city.type === "Capital City";
   const isPort = city.isPort === true;
   const isCapitalPort = isCapital && isPort;
 
-  const leftPosition = `${(city.x / MAP_WIDTH) * 100}%`;
-  const topPosition = `${(city.y / MAP_HEIGHT) * 100}%`;
-
-  let markerSize = "16px";
-  let markerZIndex = 10;
-
   if (isCapitalPort) {
-    markerSize = "20px";
-    markerZIndex = 14;
-  } else if (isCapital) {
-    markerSize = "20px";
-    markerZIndex = 13;
-  } else if (isPort) {
-    markerSize = "18px";
-    markerZIndex = 12;
+    return "capital-port";
   }
+
+  if (isCapital) {
+    return "capital";
+  }
+
+  if (isPort) {
+    return "port";
+  }
+
+  return "major-city";
+}
+
+/*
+  Gets the city icon config from AtlasConfig.json.
+*/
+function getCityIconConfig(city) {
+  const markerType = getCityIconFilterType(city);
+
+  return (
+    atlasConfig.cityIconTypes.find((iconType) => iconType.id === markerType) ||
+    atlasConfig.cityIconTypes.find((iconType) => iconType.id === "major-city")
+  );
+}
+
+/*
+  City marker styling.
+  Marker size and z-index now come from AtlasConfig.json.
+*/
+function getCityMarkerStyle(city) {
+  const cityX = city.x ?? city.coordinates?.x ?? 0;
+  const cityY = city.y ?? city.coordinates?.y ?? 0;
+
+  const leftPosition = `${(cityX / MAP_WIDTH) * 100}%`;
+  const topPosition = `${(cityY / MAP_HEIGHT) * 100}%`;
+
+  const iconConfig = getCityIconConfig(city);
+
+  const markerSize = iconConfig?.size ?? "16px";
+  const markerZIndex = iconConfig?.zIndex ?? 10;
 
   return {
     position: "absolute",
@@ -56,48 +163,189 @@ function getCityMarkerStyle(city) {
 
 /*
   City icon selection.
+  Icon path now comes from AtlasConfig.json.
 */
 function getCityIcon(city) {
-  const isCapital = city.type === "Capital City";
-  const isPort = city.isPort === true;
+  const iconConfig = getCityIconConfig(city);
 
-  if (isCapital && isPort) {
-    return "/icons/capitalport.svg";
-  }
-
-  if (isCapital) {
-    return "/icons/capital.svg";
-  }
-
-  if (isPort) {
-    return "/icons/port.svg";
-  }
-
-  return "/icons/majorcity.svg";
+  return iconConfig?.icon ?? "/icons/majorcity.svg";
 }
 
 /*
-  City icon filter type.
-  Used by the checklist to show or hide city marker groups.
+  Gets faction ids from a city.
+
+  Preferred JSON format:
+  "factionId": "sundrin-empire"
+
+  Also supports:
+  "factionIds": ["sundrin-empire"]
 */
-function getCityIconFilterType(city) {
-  const isCapital = city.type === "Capital City";
-  const isPort = city.isPort === true;
-  const isCapitalPort = isCapital && isPort;
+function getCityFactionIds(city) {
+  const ids = [
+    ...valueToArray(city.factionId),
+    ...valueToArray(city.factionIds),
+  ];
 
-  if (isCapitalPort) {
-    return "capital-port";
+  /*
+    Optional fallback:
+    If a city uses "faction": "Sundrin Empire",
+    this tries to match it to factions.json.
+  */
+  if (city.faction) {
+    const matchingFaction = factions.find(
+      (faction) =>
+        faction.name.toLowerCase() === String(city.faction).toLowerCase()
+    );
+
+    if (matchingFaction) {
+      ids.push(matchingFaction.id);
+    }
   }
 
-  if (isCapital) {
-    return "capital";
+  return uniqueArray(ids);
+}
+
+/*
+  Gets region ids from a city.
+
+  Preferred JSON format:
+  "regionId": "ulden"
+
+  Also supports:
+  "regionIds": ["ulden"]
+*/
+function getCityRegionIds(city) {
+  const ids = [
+    ...valueToArray(city.regionId),
+    ...valueToArray(city.regionIds),
+  ];
+
+  /*
+    Optional fallback:
+    If a city uses "region": "Ulden",
+    this tries to match it to regions.json.
+  */
+  if (city.region) {
+    const matchingRegion = regions.find(
+      (region) =>
+        region.name.toLowerCase() === String(city.region).toLowerCase()
+    );
+
+    if (matchingRegion) {
+      ids.push(matchingRegion.id);
+    }
   }
 
-  if (isPort) {
-    return "port";
+  return uniqueArray(ids);
+}
+
+/*
+  Gets a readable faction name for the city info panel.
+*/
+function getCityFactionName(city) {
+  if (city.faction) {
+    return city.faction;
   }
 
-  return "major-city";
+  const factionId = getCityFactionIds(city)[0];
+
+  if (!factionId) {
+    return null;
+  }
+
+  const faction = factions.find((item) => item.id === factionId);
+
+  return faction?.name ?? null;
+}
+
+/*
+  Gets a readable region name for the city info panel.
+*/
+function getCityRegionName(city) {
+  if (city.region) {
+    return city.region;
+  }
+
+  const regionId = getCityRegionIds(city)[0];
+
+  if (!regionId) {
+    return null;
+  }
+
+  const region = regions.find((item) => item.id === regionId);
+
+  return region?.name ?? null;
+}
+
+/*
+  Gets the first selected color from a list of ids.
+*/
+function getSelectedEntityColor(ids, filters, items) {
+  const selectedId = ids.find((id) => filters[id] === true);
+
+  if (!selectedId) {
+    return null;
+  }
+
+  const selectedItem = items.find((item) => item.id === selectedId);
+
+  return selectedItem?.color ?? "#fcd34d";
+}
+
+/*
+  City highlight color.
+
+  Factions take priority over regions if both are enabled.
+*/
+function getCityHighlightColor(
+  city,
+  atlasLayerFilters,
+  factionFilters,
+  regionFilters
+) {
+  if (atlasLayerFilters.factions) {
+    const factionColor = getSelectedEntityColor(
+      getCityFactionIds(city),
+      factionFilters,
+      factions
+    );
+
+    if (factionColor) {
+      return factionColor;
+    }
+  }
+
+  if (atlasLayerFilters.regions) {
+    const regionColor = getSelectedEntityColor(
+      getCityRegionIds(city),
+      regionFilters,
+      regions
+    );
+
+    if (regionColor) {
+      return regionColor;
+    }
+  }
+
+  return null;
+}
+
+/*
+  City marker visual filter.
+
+  Selected city keeps the original gold glow.
+  Faction/region highlighted cities get their faction/region color glow.
+*/
+function getCityMarkerFilter(isSelected, highlightColor) {
+  if (isSelected) {
+    return "drop-shadow(0 0 4px rgba(255, 255, 180, 1)) drop-shadow(0 0 9px rgba(255, 196, 0, 1)) drop-shadow(0 0 16px rgba(255, 115, 0, 0.95)) drop-shadow(0 0 24px rgba(255, 60, 0, 0.75))";
+  }
+
+  if (highlightColor) {
+    return `drop-shadow(0 0 5px ${highlightColor}) drop-shadow(0 0 12px ${highlightColor}) drop-shadow(0 0 20px ${highlightColor})`;
+  }
+
+  return "drop-shadow(0 3px 4px rgba(17, 59, 19, 0.60))";
 }
 
 /*
@@ -182,7 +430,7 @@ function RouteKeyItem({ color, dashArray, label, checked, onChange }) {
           stroke={color}
           strokeWidth="4"
           strokeLinecap="round"
-          strokeDasharray={dashArray}
+          strokeDasharray={dashArray === "none" ? undefined : dashArray}
           style={{
             filter: "drop-shadow(0 0 4px rgba(255, 255, 255, 0.35))",
           }}
@@ -195,187 +443,392 @@ function RouteKeyItem({ color, dashArray, label, checked, onChange }) {
 }
 
 /*
-  Map key panel.
-  The routeFilters and setRouteFilters values are passed in from App.
-  The cityIconFilters and setCityIconFilters values are also passed in from App.
+  Simple checkbox row for Atlas Layers.
+*/
+function CheckboxTextItem({ label, checked, onChange }) {
+  return (
+    <label
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+        cursor: "pointer",
+      }}
+    >
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+        style={{
+          cursor: "pointer",
+          accentColor: "#fcd34d",
+        }}
+      />
 
-  The map key now acts as both:
-  1. A symbol explanation.
-  2. A checklist for showing and hiding map layers.
+      <span>{label}</span>
+    </label>
+  );
+}
+
+/*
+  Checkbox row with a color swatch.
+  Used for individual faction and region options.
+*/
+function ColorCheckboxItem({ color, label, checked, onChange }) {
+  return (
+    <label
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+        cursor: "pointer",
+      }}
+    >
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+        style={{
+          cursor: "pointer",
+          accentColor: "#fcd34d",
+        }}
+      />
+
+      <span
+        style={{
+          width: "18px",
+          height: "18px",
+          borderRadius: "5px",
+          backgroundColor: color,
+          border: "1px solid rgba(255,255,255,0.45)",
+          boxShadow: `0 0 8px ${color}`,
+          flexShrink: 0,
+        }}
+      />
+
+      <span>{label}</span>
+    </label>
+  );
+}
+
+/*
+  Map key panel.
+
+  Column 1:
+  - City marker toggles
+  - Route type toggles
+
+  Column 2:
+  - Factions master toggle
+  - Regions master toggle
+
+  Column 3:
+  - Only appears when Factions or Regions are turned on
+  - Individual faction/region options default off
 */
 function MapKey({
   routeFilters,
   setRouteFilters,
   cityIconFilters,
   setCityIconFilters,
+  atlasLayerFilters,
+  setAtlasLayerFilters,
+  factionFilters,
+  setFactionFilters,
+  regionFilters,
+  setRegionFilters,
 }) {
+  const showLayerOptions =
+    atlasLayerFilters.factions || atlasLayerFilters.regions;
+
   return (
     <aside
       style={{
-        width: "500px",
-        minWidth: "280px",
+        flex: 1,
+        minWidth: showLayerOptions ? "760px" : "500px",
         backgroundColor: "#3d0f0f",
         color: "#cbd5e1",
         border: "0.5px solid #1a0206",
         borderRadius: "12px",
         padding: "20px",
         boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+        boxSizing: "border-box",
       }}
     >
-      <h2
-        style={{
-          fontSize: "28px",
-          marginTop: 0,
-        }}
-      >
-        Map Key
-      </h2>
-
       <div
         style={{
           display: "grid",
-          gap: "14px",
-          fontSize: "15px",
+          gridTemplateColumns: showLayerOptions ? "1fr 1fr 1.2fr" : "1fr 1fr",
+          gap: "28px",
+          alignItems: "start",
         }}
       >
-        <MapKeyItem
-          icon="/icons/capitalport.svg"
-          label="Capital Port City"
-          checked={cityIconFilters["capital-port"]}
-          onChange={() =>
-            setCityIconFilters((previousFilters) => ({
-              ...previousFilters,
-              "capital-port": !previousFilters["capital-port"],
-            }))
-          }
-        />
+        {/* Column 1 */}
+        <section>
+          <h2
+            style={{
+              fontSize: "28px",
+              marginTop: 0,
+            }}
+          >
+            Map Key
+          </h2>
 
-        <MapKeyItem
-          icon="/icons/capital.svg"
-          label="Capital City"
-          checked={cityIconFilters["capital"]}
-          onChange={() =>
-            setCityIconFilters((previousFilters) => ({
-              ...previousFilters,
-              "capital": !previousFilters["capital"],
-            }))
-          }
-        />
+          <div
+            style={{
+              display: "grid",
+              gap: "14px",
+              fontSize: "15px",
+            }}
+          >
+            {atlasConfig.cityIconTypes.map((iconType) => (
+              <MapKeyItem
+                key={iconType.id}
+                icon={iconType.icon}
+                label={iconType.label}
+                checked={cityIconFilters[iconType.id] === true}
+                onChange={() =>
+                  setCityIconFilters((previousFilters) => ({
+                    ...previousFilters,
+                    [iconType.id]: !previousFilters[iconType.id],
+                  }))
+                }
+              />
+            ))}
 
-        <MapKeyItem
-          icon="/icons/port.svg"
-          label="Port City"
-          checked={cityIconFilters["port"]}
-          onChange={() =>
-            setCityIconFilters((previousFilters) => ({
-              ...previousFilters,
-              "port": !previousFilters["port"],
-            }))
-          }
-        />
+            {atlasConfig.routeTypes.map((routeType) => (
+              <RouteKeyItem
+                key={routeType.id}
+                color={routeType.color}
+                dashArray={routeType.dashArray ?? "none"}
+                label={routeType.label}
+                checked={routeFilters[routeType.id] === true}
+                onChange={() =>
+                  setRouteFilters((previousFilters) => ({
+                    ...previousFilters,
+                    [routeType.id]: !previousFilters[routeType.id],
+                  }))
+                }
+              />
+            ))}
 
-        <MapKeyItem
-          icon="/icons/majorcity.svg"
-          label="Major City"
-          checked={cityIconFilters["major-city"]}
-          onChange={() =>
-            setCityIconFilters((previousFilters) => ({
-              ...previousFilters,
-              "major-city": !previousFilters["major-city"],
-            }))
-          }
-        />
+            <hr
+              style={{
+                width: "100%",
+                borderColor: "#cbd5e1",
+              }}
+            />
 
-        <RouteKeyItem
-          color="#d97706"
-          dashArray="4 4"
-          label="Trade Road"
-          checked={routeFilters["trade-road"]}
-          onChange={() =>
-            setRouteFilters((previousFilters) => ({
-              ...previousFilters,
-              "trade-road": !previousFilters["trade-road"],
-            }))
-          }
-        />
+            <p
+              style={{
+                color: "#94a3b8",
+                lineHeight: 1.5,
+                margin: 0,
+              }}
+            >
+              Check or uncheck map key items to show or hide city icons and
+              selected city routes.
+            </p>
+          </div>
+        </section>
 
-        <RouteKeyItem
-          color="#2563eb"
-          dashArray="10 8"
-          label="Sea Route"
-          checked={routeFilters["sea-route"]}
-          onChange={() =>
-            setRouteFilters((previousFilters) => ({
-              ...previousFilters,
-              "sea-route": !previousFilters["sea-route"],
-            }))
-          }
-        />
+        {/* Column 2 */}
+        <section>
+          <h2
+            style={{
+              fontSize: "28px",
+              marginTop: 0,
+            }}
+          >
+            Atlas Layers
+          </h2>
 
-        <RouteKeyItem
-          color="#9ca3af"
-          dashArray="none"
-          label="Road"
-          checked={routeFilters["road"]}
-          onChange={() =>
-            setRouteFilters((previousFilters) => ({
-              ...previousFilters,
-              "road": !previousFilters["road"],
-            }))
-          }
-        />
+          <div
+            style={{
+              display: "grid",
+              gap: "14px",
+              fontSize: "15px",
+            }}
+          >
+            <CheckboxTextItem
+              label="Factions"
+              checked={atlasLayerFilters.factions === true}
+              onChange={() =>
+                setAtlasLayerFilters((previousFilters) => ({
+                  ...previousFilters,
+                  factions: !previousFilters.factions,
+                }))
+              }
+            />
 
-        <hr
-          style={{
-            width: "100%",
-            borderColor: "#cbd5e1",
-          }}
-        />
+            <CheckboxTextItem
+              label="Regions"
+              checked={atlasLayerFilters.regions === true}
+              onChange={() =>
+                setAtlasLayerFilters((previousFilters) => ({
+                  ...previousFilters,
+                  regions: !previousFilters.regions,
+                }))
+              }
+            />
 
-        <p
-          style={{
-            color: "#94a3b8",
-            lineHeight: 1.5,
-            margin: 0,
-          }}
-        >
-          Check or uncheck map key items to show or hide city icons and selected
-          city routes.
-        </p>
+            <p
+              style={{
+                color: "#94a3b8",
+                lineHeight: 1.5,
+                margin: 0,
+              }}
+            >
+              Turn on a layer to reveal its individual options.
+            </p>
+          </div>
+        </section>
+
+        {/* Column 3 */}
+        {showLayerOptions && (
+          <section>
+            <h2
+              style={{
+                fontSize: "28px",
+                marginTop: 0,
+              }}
+            >
+              Layer Options
+            </h2>
+
+            <div
+              style={{
+                display: "grid",
+                gap: "18px",
+                fontSize: "15px",
+              }}
+            >
+              {atlasLayerFilters.factions && (
+                <div>
+                  <h3
+                    style={{
+                      color: "#fcd34d",
+                      fontSize: "18px",
+                      marginTop: 0,
+                      marginBottom: "12px",
+                    }}
+                  >
+                    Factions
+                  </h3>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gap: "10px",
+                    }}
+                  >
+                    {factions.map((faction) => (
+                      <ColorCheckboxItem
+                        key={faction.id}
+                        color={faction.color}
+                        label={faction.name}
+                        checked={factionFilters[faction.id] === true}
+                        onChange={() =>
+                          setFactionFilters((previousFilters) => ({
+                            ...previousFilters,
+                            [faction.id]: !previousFilters[faction.id],
+                          }))
+                        }
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {atlasLayerFilters.regions && (
+                <div>
+                  <h3
+                    style={{
+                      color: "#fcd34d",
+                      fontSize: "18px",
+                      marginTop: 0,
+                      marginBottom: "12px",
+                    }}
+                  >
+                    Regions
+                  </h3>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gap: "10px",
+                    }}
+                  >
+                    {regions.map((region) => (
+                      <ColorCheckboxItem
+                        key={region.id}
+                        color={region.color}
+                        label={region.name}
+                        checked={regionFilters[region.id] === true}
+                        onChange={() =>
+                          setRegionFilters((previousFilters) => ({
+                            ...previousFilters,
+                            [region.id]: !previousFilters[region.id],
+                          }))
+                        }
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
       </div>
     </aside>
   );
 }
 
 /*
-  Main app.
+  Main App.
 */
 export default function App() {
+  const [currentUser, setCurrentUser] = useState(() => getSavedUser());
   const [selectedCity, setSelectedCity] = useState(null);
   const [lastClick, setLastClick] = useState(null);
   const [musicPlaying, setMusicPlaying] = useState(false);
 
-  const [routeFilters, setRouteFilters] = useState({
-    "road": true,
-    "trade-road": true,
-    "sea-route": true,
+  const [routeFilters, setRouteFilters] = useState(() =>
+    buildDefaultFilters(atlasConfig.routeTypes)
+  );
+
+  const [cityIconFilters, setCityIconFilters] = useState(() =>
+    buildDefaultFilters(atlasConfig.cityIconTypes)
+  );
+
+  /*
+    Factions and regions are both toggled off by default.
+  */
+  const [atlasLayerFilters, setAtlasLayerFilters] = useState({
+    factions: false,
+    regions: false,
   });
 
-  const [cityIconFilters, setCityIconFilters] = useState({
-    "capital-port": true,
-    "capital": true,
-    "port": true,
-    "major-city": true,
-  });
+  /*
+    Individual faction and region options are also off by default.
+  */
+  const [factionFilters, setFactionFilters] = useState(() =>
+    buildDefaultFilters(factions, false)
+  );
+
+  const [regionFilters, setRegionFilters] = useState(() =>
+    buildDefaultFilters(regions, false)
+  );
 
   const musicRef = useRef(null);
   const cityClickSoundRef = useRef(null);
 
   /*
-    Try to start the map music when the page loads.
+    Try to start the map music after the user logs in.
     Some browsers will block this until the user clicks.
   */
   useEffect(() => {
+    if (!currentUser) return;
     if (!musicRef.current) return;
 
     musicRef.current.volume = 0.1;
@@ -390,16 +843,31 @@ export default function App() {
         console.log("Autoplay was blocked. User must click Play Map Music.");
         setMusicPlaying(false);
       });
-  }, []);
+  }, [currentUser]);
+
+  /*
+    Logs the user out and returns to the login screen.
+  */
+  function handleLogout() {
+    localStorage.removeItem("triokaUser");
+    setCurrentUser(null);
+    setSelectedCity(null);
+    setLastClick(null);
+    setMusicPlaying(false);
+
+    if (musicRef.current) {
+      musicRef.current.pause();
+      musicRef.current.currentTime = 0;
+    }
+  }
 
   /*
     Map click handler.
+
     Reads where the user clicked.
     Converts screen position into map x/y coordinates.
 
     This also clears the selected city.
-    City marker clicks use event.stopPropagation(), so clicking a city will not
-    trigger this empty-map click behavior.
   */
   function handleMapClick(event) {
     const mapElement = event.currentTarget;
@@ -459,6 +927,13 @@ export default function App() {
     }
   }
 
+  /*
+    Shows the login screen before the atlas loads.
+  */
+  if (!currentUser) {
+    return <Login onLogin={setCurrentUser} />;
+  }
+
   return (
     <main
       style={{
@@ -473,10 +948,10 @@ export default function App() {
       }}
     >
       {/* Audio files */}
-      <audio ref={musicRef} src="/audio/Menumusic.mp3" preload="auto" />
+      <audio ref={musicRef} src={atlasConfig.audio.music} preload="auto" />
       <audio
         ref={cityClickSoundRef}
-        src="/audio/fireclickshort.mp3"
+        src={atlasConfig.audio.cityClick}
         preload="auto"
       />
 
@@ -491,13 +966,69 @@ export default function App() {
           transformOrigin: "center center",
         }}
       >
+        {/* Login status bar */}
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "12px",
+            marginBottom: "12px",
+            backgroundColor: "#3d0f0f",
+            border: "0.5px solid #1a0206",
+            borderRadius: "12px",
+            padding: "12px 16px",
+            boxShadow: "0 12px 30px rgba(0,0,0,0.35)",
+            boxSizing: "border-box",
+          }}
+        >
+          <div
+            style={{
+              color: "#cbd5e1",
+              fontSize: "15px",
+            }}
+          >
+            Logged in as:{" "}
+            <strong
+              style={{
+                color: "#fcd34d",
+              }}
+            >
+              {currentUser.displayName ?? currentUser.username ?? "Unknown User"}
+            </strong>{" "}
+            <span
+              style={{
+                color: "#94a3b8",
+              }}
+            >
+              ({currentUser.role ?? "unknown role"})
+            </span>
+          </div>
+
+          <button
+            onClick={handleLogout}
+            style={{
+              backgroundColor: "#111827",
+              color: "white",
+              border: "1px solid #fcd34d",
+              borderRadius: "8px",
+              padding: "8px 12px",
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            Logout
+          </button>
+        </div>
+
         {/* Map container */}
         <div
           onClick={handleMapClick}
           style={{
             position: "relative",
             width: "100%",
-            aspectRatio: "1578 / 996",
+            aspectRatio: `${MAP_WIDTH} / ${MAP_HEIGHT}`,
             overflow: "hidden",
             borderRadius: "16px",
             border: "1px solid #334155",
@@ -507,8 +1038,8 @@ export default function App() {
         >
           {/* Map image */}
           <img
-            src="/Trioka-and-the-Grey.jpg"
-            alt="Map of Trioka"
+            src={atlasConfig.map.image}
+            alt={atlasConfig.map.alt}
             draggable="false"
             style={{
               position: "absolute",
@@ -521,11 +1052,14 @@ export default function App() {
             }}
           />
 
-          {/* Road, trade route, and sea route layer */}
+          {/* Road, trade route, sea route, faction, and region route layer */}
           <RouteLayer
             routes={routes}
             selectedCity={selectedCity}
             routeFilters={routeFilters}
+            atlasLayerFilters={atlasLayerFilters}
+            factionFilters={factionFilters}
+            regionFilters={regionFilters}
           />
 
           {/* Coordinate display */}
@@ -556,6 +1090,13 @@ export default function App() {
             .map((city) => {
               const isSelected = selectedCity?.id === city.id;
 
+              const highlightColor = getCityHighlightColor(
+                city,
+                atlasLayerFilters,
+                factionFilters,
+                regionFilters
+              );
+
               return (
                 <button
                   key={city.id}
@@ -579,9 +1120,7 @@ export default function App() {
                       userSelect: "none",
                       transition: "filter 160ms ease, transform 160ms ease",
                       transform: isSelected ? "scale(1.35)" : "scale(1)",
-                      filter: isSelected
-                        ? "drop-shadow(0 0 4px rgba(255, 255, 180, 1)) drop-shadow(0 0 9px rgba(255, 196, 0, 1)) drop-shadow(0 0 16px rgba(255, 115, 0, 0.95)) drop-shadow(0 0 24px rgba(255, 60, 0, 0.75))"
-                        : "drop-shadow(0 3px 4px rgba(17, 59, 19, 0.60))",
+                      filter: getCityMarkerFilter(isSelected, highlightColor),
                     }}
                   />
                 </button>
@@ -610,6 +1149,7 @@ export default function App() {
               borderRadius: "12px",
               padding: "20px",
               boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+              boxSizing: "border-box",
             }}
           >
             {/* Music button */}
@@ -652,11 +1192,35 @@ export default function App() {
                   {selectedCity.name}
                 </h2>
 
+                {/* Faction and region */}
+                {(getCityFactionName(selectedCity) ||
+                  getCityRegionName(selectedCity)) && (
+                  <p
+                    style={{
+                      color: "#94a3b8",
+                      fontSize: "14px",
+                      marginTop: "-8px",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {getCityFactionName(selectedCity) && (
+                      <>
+                        {getCityFactionName(selectedCity)}
+                        <br />
+                      </>
+                    )}
+
+                    {getCityRegionName(selectedCity) && (
+                      <>{getCityRegionName(selectedCity)}</>
+                    )}
+                  </p>
+                )}
+
                 {/* City image */}
                 {selectedCity.portraits && (
                   <img
                     src={selectedCity.portraits}
-                    alt={`${selectedCity.name} portraits`}
+                    alt={`${selectedCity.name} image`}
                     style={{
                       width: "100%",
                       height: "300px",
@@ -678,6 +1242,62 @@ export default function App() {
                 >
                   {selectedCity.description}
                 </p>
+
+                {/* Known for */}
+                {Array.isArray(selectedCity.knownFor) &&
+                  selectedCity.knownFor.length > 0 && (
+                    <>
+                      <h3
+                        style={{
+                          color: "#fcd34d",
+                          fontSize: "18px",
+                          marginBottom: "8px",
+                        }}
+                      >
+                        Known For
+                      </h3>
+
+                      <ul
+                        style={{
+                          color: "#cbd5e1",
+                          lineHeight: 1.6,
+                          paddingLeft: "20px",
+                        }}
+                      >
+                        {selectedCity.knownFor.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+
+                {/* Quest hooks */}
+                {Array.isArray(selectedCity.questHooks) &&
+                  selectedCity.questHooks.length > 0 && (
+                    <>
+                      <h3
+                        style={{
+                          color: "#fcd34d",
+                          fontSize: "18px",
+                          marginBottom: "8px",
+                        }}
+                      >
+                        Quest Hooks
+                      </h3>
+
+                      <ul
+                        style={{
+                          color: "#cbd5e1",
+                          lineHeight: 1.6,
+                          paddingLeft: "20px",
+                        }}
+                      >
+                        {selectedCity.questHooks.map((hook) => (
+                          <li key={hook}>{hook}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
               </>
             ) : (
               <>
@@ -688,7 +1308,7 @@ export default function App() {
                     marginTop: 0,
                   }}
                 >
-                  Trioka Map
+                  {atlasConfig.projectName}
                 </h2>
 
                 <p
@@ -714,12 +1334,18 @@ export default function App() {
             )}
           </aside>
 
-          {/* Static map key */}
+          {/* Map key */}
           <MapKey
             routeFilters={routeFilters}
             setRouteFilters={setRouteFilters}
             cityIconFilters={cityIconFilters}
             setCityIconFilters={setCityIconFilters}
+            atlasLayerFilters={atlasLayerFilters}
+            setAtlasLayerFilters={setAtlasLayerFilters}
+            factionFilters={factionFilters}
+            setFactionFilters={setFactionFilters}
+            regionFilters={regionFilters}
+            setRegionFilters={setRegionFilters}
           />
         </div>
       </div>

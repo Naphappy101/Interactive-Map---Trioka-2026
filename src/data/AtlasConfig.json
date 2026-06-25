@@ -1,0 +1,70 @@
+{
+  "projectName": "Trioka Atlas",
+  "map": {
+    "width": 1578,
+    "height": 996,
+    "image": "/Trioka-and-the-Grey.jpg",
+    "alt": "Map of Trioka"
+  },
+  "audio": {
+    "music": "/audio/Menumusic.mp3",
+    "cityClick": "/audio/fireclickshort.mp3"
+  },
+  "cityIconTypes": [
+    {
+      "id": "capital-port",
+      "label": "Capital Port City",
+      "icon": "/icons/capitalport.svg",
+      "size": "20px",
+      "zIndex": 14,
+      "defaultVisible": true
+    },
+    {
+      "id": "capital",
+      "label": "Capital City",
+      "icon": "/icons/capital.svg",
+      "size": "20px",
+      "zIndex": 13,
+      "defaultVisible": true
+    },
+    {
+      "id": "port",
+      "label": "Port City",
+      "icon": "/icons/port.svg",
+      "size": "18px",
+      "zIndex": 12,
+      "defaultVisible": true
+    },
+    {
+      "id": "major-city",
+      "label": "Major City",
+      "icon": "/icons/majorcity.svg",
+      "size": "16px",
+      "zIndex": 10,
+      "defaultVisible": true
+    }
+  ],
+  "routeTypes": [
+    {
+      "id": "trade-road",
+      "label": "Trade Road",
+      "color": "#d97706",
+      "dashArray": "4 4",
+      "defaultVisible": true
+    },
+    {
+      "id": "sea-route",
+      "label": "Sea Route",
+      "color": "#2563eb",
+      "dashArray": "10 8",
+      "defaultVisible": true
+    },
+    {
+      "id": "road",
+      "label": "Road",
+      "color": "#9ca3af",
+      "dashArray": "none",
+      "defaultVisible": true
+    }
+  ]
+}

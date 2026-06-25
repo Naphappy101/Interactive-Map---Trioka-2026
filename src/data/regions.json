@@ -1,0 +1,44 @@
+[
+  {
+    "id": "ostirose",
+    "name": "Ostirose",
+    "color": "#22c55e",
+    "defaultVisible": false
+  },
+  {
+    "id": "ulden",
+    "name": "Ulden",
+    "color": "#15803d",
+    "defaultVisible": false
+  },
+  {
+    "id": "cantra",
+    "name": "Cantra",
+    "color": "#ca8a04",
+    "defaultVisible": false
+  },
+  {
+    "id": "tranquil-sea",
+    "name": "Tranquil Sea",
+    "color": "#0ea5e9",
+    "defaultVisible": false
+  },
+  {
+    "id": "narrow-sea",
+    "name": "Narrow Sea",
+    "color": "#2563eb",
+    "defaultVisible": false
+  },
+  {
+    "id": "western-depths",
+    "name": "Western Depths",
+    "color": "#1e3a8a",
+    "defaultVisible": false
+  },
+  {
+    "id": "wildlands-region",
+    "name": "Wildlands",
+    "color": "#94a3b8",
+    "defaultVisible": false
+  }
+]

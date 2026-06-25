@@ -1,0 +1,14 @@
+[
+  {
+    "username": "DM",
+    "password": "DoNotPeek@1",
+    "role": "dm",
+    "displayName": "Dungeon Master"
+  },
+  {
+    "username": "player",
+    "password": "trioka",
+    "role": "player",
+    "displayName": "Player"
+  }
+]
